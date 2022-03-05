@@ -15,6 +15,17 @@ class CreateLineMembersTable extends Migration
     {
         Schema::create('line_members', function (Blueprint $table) {
             $table->id();
+            $table->string("access_token");
+            $table->bigInteger("expires_in");
+            // JWT形式のデータ
+            $table->string("id_token", 2048);
+            $table->string("refresh_token");
+            $table->string("token_type");
+            $table->string("email");
+            $table->string("picture");
+            $table->string("name");
+            $table->string("sub");
+            $table->string("aud");
             $table->timestamps();
         });
     }

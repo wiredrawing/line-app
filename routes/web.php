@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Line\LoginController;
+use App\Http\Controllers\Line\LogoutController;
+use App\Http\Controllers\Line\CallbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +18,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+
+// -------------------------------------------------------------------------
+// LINEログイン用のグループURL
+// -------------------------------------------------------------------------
+Route::group(["prefix" => "line", "as" => "line."], function () {
+
+    // ログイン用コントローラー
+    Route::get("/login/{line_account_id}", [LoginController::class, "index"])->name("login.index");
+
+    // LINEドメイン側で認証後に戻ってくるweb側のコールバックURL
+    Route::get("/callback/{line_account_id}", [CallbackController::class, "index"])->name("callback.index");
+
+    // LINEアカウントからログアウトするURL
+    Route::get("/logout", [LogoutController::class, "index"])->name("logout.index");
 });
