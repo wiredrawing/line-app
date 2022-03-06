@@ -23,5 +23,12 @@ class LineMember extends Model
         "name",
         "sub",
         "aud",
+        "line_account_id",
+        "api_token",
     ];
+
+    public function line_account()
+    {
+        return $this->belongsTo(LineAccount::class, "line_account_id", "id");
+    }
 }

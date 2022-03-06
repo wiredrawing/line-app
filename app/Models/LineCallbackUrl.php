@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class LineCallbackUrl extends Model
 {
     use HasFactory;
+
+
+
+    public $fillable = [
+        "line_account_id",
+        "url",
+    ];
 }

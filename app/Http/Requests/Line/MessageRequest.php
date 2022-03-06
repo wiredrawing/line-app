@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Line;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
 
-class CallbackRequest extends FormRequest
+class MessageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,30 +24,11 @@ class CallbackRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [];
         $current_route = Route::currentRouteName();
 
-        if ($this->isMethod("get")) {
-            if ($current_route === "line.callback.index") {
-                $rules = [
-                    "line_account_id" => [
-                        "required",
-                        "integer",
-                    ],
-                    "code" => [
-                        "required",
-                        "string",
-                    ],
-                    "state" => [
-                        "required",
-                        "string",
-                    ],
-                    "api_token" => [
-                        "required",
-                        "string",
-                    ],
-                ];
-            } elseif ($current_route === "line.callback.completed") {
+        $rules = [];
+        if ($this->isMethod("post")) {
+            if ($current_route === "line.message.pushing") {
                 $rules = [
                     "line_account_id" => [
                         "required",
@@ -56,15 +37,15 @@ class CallbackRequest extends FormRequest
                     "api_token" => [
                         "required",
                         "string",
-                    ],
+                    ]
                 ];
             }
+        } elseif ($this->isMethod("get")) {
         }
+
 
         return $rules;
     }
-
-
 
     public function validationData()
     {

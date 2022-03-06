@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Line;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
 
 class LoginRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class LoginRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +24,29 @@ class LoginRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $rules = [];
+
+        $current_route = Route::currentRouteName();
+        if ($this->isMethod("get")) {
+            if ($current_route === "line.login.index") {
+                $rules = [
+                    "line_account_id" => [
+                        "required",
+                        "integer",
+                    ]
+                ];
+            }
+        }
+
+        return $rules;
+    }
+
+
+    public function validationData()
+    {
+        return array_merge(
+            $this->all(),
+            $this->route()->parameters(),
+        );
     }
 }

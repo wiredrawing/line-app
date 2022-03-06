@@ -26,6 +26,9 @@ class CreateLineMembersTable extends Migration
             $table->string("name");
             $table->string("sub");
             $table->string("aud");
+            $table->bigInteger("line_account_id");
+            // LINEプラットフォームとは別に本アプリケーション側で扱うトークン
+            $table->string("api_token")->nullable();
             $table->timestamps();
         });
     }
