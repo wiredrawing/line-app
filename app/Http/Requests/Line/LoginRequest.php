@@ -28,13 +28,19 @@ class LoginRequest extends FormRequest
 
         $current_route = Route::currentRouteName();
         if ($this->isMethod("get")) {
-            if ($current_route === "line.login.index") {
+            if ($current_route === "line.login.detail") {
                 $rules = [
                     "line_account_id" => [
                         "required",
                         "integer",
+                    ],
+                    "application_key" => [
+                        "required",
+                        "string",
                     ]
                 ];
+            } elseif ($current_route === "line.login.index") {
+                $rules = [];
             }
         }
 

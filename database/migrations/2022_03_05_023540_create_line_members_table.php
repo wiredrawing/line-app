@@ -24,12 +24,29 @@ class CreateLineMembersTable extends Migration
             $table->string("email");
             $table->string("picture");
             $table->string("name");
+            // LINEプラットフォームが提供するLINEユーザーのID
             $table->string("sub");
             $table->string("aud");
             $table->bigInteger("line_account_id");
+            // ---------------------------------------------------------
             // LINEプラットフォームとは別に本アプリケーション側で扱うトークン
+            // api_tokenカラムはログインの度に更新される
+            // ---------------------------------------------------------
             $table->string("api_token")->nullable();
             $table->timestamps();
+
+            // 本アプリケーション側のユーザー用トークン
+            $table->unique([
+                "line_account_id",
+                "api_token",
+            ], "line_account_id_api_token");
+
+            // ユニーク制約
+            // LINE側のユーザーのID
+            $table->unique([
+                "line_account_id",
+                "sub",
+            ], "line_account_id_sub");
         });
     }
 

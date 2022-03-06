@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class LineMessage extends Model
 {
     use HasFactory;
+
+
+    public $fillable = [
+        "line_account_id",
+        "type",
+        "text",
+        "delivery_datetime",
+    ];
 }

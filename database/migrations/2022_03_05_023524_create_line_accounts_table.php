@@ -16,15 +16,17 @@ class CreateLineAccountsTable extends Migration
         Schema::create('line_accounts', function (Blueprint $table) {
             $table->id();
             // LINEログイン
-            $table->string("channel_id");
-            $table->string("channel_secret");
-            $table->string("user_id");
+            $table->string("channel_id", 512);
+            $table->string("channel_secret", 512);
+            $table->string("user_id", 512);
             // MessagingAPI
-            $table->string("messaging_channel_id");
-            $table->string("messaging_channel_secret");
-            $table->string("messaging_user_id");
-            $table->string("messaging_channel_access_token")->nullable();
-            $table->string("webhook_url")->nullable();
+            $table->string("messaging_channel_id", 512);
+            $table->string("messaging_channel_secret", 512);
+            $table->string("messaging_user_id", 512);
+            $table->string("messaging_channel_access_token", 512)->nullable();
+            $table->string("webhook_url", 512)->nullable();
+            // 本アプリケーションをある程度非公開にするためのアプリケーションキー
+            $table->string("application_key", 512)->nullable();
             $table->tinyInteger("is_enabled")->default(1);
             $table->tinyInteger("is_hidden")->default(0);
             $table->timestamps();

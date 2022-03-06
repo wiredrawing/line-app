@@ -5,15 +5,36 @@ namespace App\Http\Controllers\Line;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Line\MessageRequest;
 use App\Models\LineMember;
-use Illuminate\Http\Request;
+use App\Models\LineMessage;
 use Illuminate\Support\Facades\Http;
 
 class MessageController extends Controller
 {
-    //
 
 
+    /**
+     * 指定したLINEアカウントでメッセージを予約する
+     *
+     * @param MessageRequest $request
+     * @param integer $line_account_id
+     * @return void
+     */
+    public function reserve(MessageRequest $request, int $line_account_id)
+    {
+        try {
+            $validated = $request->validated();
 
+            $line_message = LineMessage::create($validated);
+
+            if ($line_message === null) {
+                throw new \Exception("メッセージの予約に失敗しました");
+            }
+        } catch (\Exception $e) {
+            return view("errors.index", [
+                "e" => $e,
+            ]);
+        }
+    }
 
 
     /**
@@ -27,7 +48,7 @@ class MessageController extends Controller
     {
         try {
             $validated = $request->validated();
-            print_r($validated);
+
             $line_member = LineMember::with([
                 "line_account",
             ])
@@ -51,12 +72,7 @@ class MessageController extends Controller
                 "Authorization" => "Bearer {$line_member->line_account->messaging_channel_access_token}",
             ])->post(Config("const.line_login.push"), [
                 "to" => $line_member->sub,
-                "messages" => [
-                    [
-                        "type" => "text",
-                        "text" => "テキストメッセージ",
-                    ]
-                ],
+                "messages" => $validated["messages"],
             ]);
             $response->throw();
 

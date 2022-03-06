@@ -21,7 +21,6 @@ class RandomToken
             range("A", "Z"),
         );
         $characters[] = "_";
-        $characters[] = ".";
         $characters[] = "-";
 
         $random_token = "";

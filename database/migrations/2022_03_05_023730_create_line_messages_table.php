@@ -15,6 +15,11 @@ class CreateLineMessagesTable extends Migration
     {
         Schema::create('line_messages', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger("line_account_id");
+            $table->string("type", 512);
+            $table->string("text", 5000);
+            // 配信予定日
+            $table->dateTime("delivery_datetime");
             $table->timestamps();
         });
     }

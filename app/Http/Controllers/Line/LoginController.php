@@ -14,6 +14,31 @@ class LoginController extends Controller
 {
 
 
+    /**
+     * 現在登録中のLINEアプリケーション一覧を表示
+     *
+     * @param LoginRequest $request
+     * @return void
+     */
+    public function index(LoginRequest $request)
+    {
+        try {
+            $line_accounts = LineAccount::with([
+                "line_callback_urls",
+            ])
+            ->where([
+                "is_enabled" =>  Config("const.binary_type.on"),
+                "is_hidden" => Config("const.binary_type.off"),
+            ])
+            ->get();
+            return view("line.login.list", $line_accounts);
+        } catch (\Exception $e) {
+            return response()->view("errors.index", [
+                "e" => $e,
+            ]);
+        }
+    }
+
 
 
 
@@ -21,17 +46,21 @@ class LoginController extends Controller
     /**
      * 任意のLINEアプリケーションへのLINEログインのページ
      *
-     * @param Request $request
+     * @param LoginRequest $request
      * @param integer $line_account_id
+     * @param string $application_key
      * @return void
      */
-    public function index(LoginRequest $request, int $line_account_id)
+    public function detail(LoginRequest $request, int $line_account_id, string $application_key)
     {
         try {
             $validated = $request->validated();
 
             $line_account = LineAccount::with([
                 "line_callback_urls",
+            ])
+            ->where([
+                "application_key" => $application_key,
             ])
             ->whereHas("line_callback_urls")
             ->findOrFail($validated["line_account_id"]);
@@ -63,7 +92,9 @@ class LoginController extends Controller
 
             return redirect(Config("const.line_login.authorize")."?".http_build_query($query_build));
         } catch (\Exception $e) {
-            return response()->view("errors.index");
+            return response()->view("errors.index", [
+                "e" => $e,
+            ]);
         }
     }
 }

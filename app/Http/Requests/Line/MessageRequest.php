@@ -28,7 +28,7 @@ class MessageRequest extends FormRequest
 
         $rules = [];
         if ($this->isMethod("post")) {
-            if ($current_route === "line.message.pushing") {
+            if ($current_route === "line.message.reserve") {
                 $rules = [
                     "line_account_id" => [
                         "required",
@@ -37,6 +37,48 @@ class MessageRequest extends FormRequest
                     "api_token" => [
                         "required",
                         "string",
+                    ],
+                    "messages" => [
+                        "required",
+                        "array",
+                    ],
+                    "messages.*.type" => [
+                        "required",
+                        "string",
+                    ],
+                    "messages.*.text" => [
+                        "required",
+                        "string",
+                        "between:1,4000"
+                    ],
+                    // 配信予定日は日時を厳格に指定するようにする
+                    "delivery_datetime" => [
+                        "required",
+                        "date_format:Y-m-d H:i:s",
+                    ]
+                ];
+            } elseif ($current_route === "line.message.pushing") {
+                $rules = [
+                    "line_account_id" => [
+                        "required",
+                        "integer",
+                    ],
+                    "api_token" => [
+                        "required",
+                        "string",
+                    ],
+                    "messages" => [
+                        "required",
+                        "array",
+                    ],
+                    "messages.*.type" => [
+                        "required",
+                        "string",
+                    ],
+                    "messages.*.text" => [
+                        "required",
+                        "string",
+                        "between:1,4000"
                     ]
                 ];
             }

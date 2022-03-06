@@ -20,6 +20,7 @@ class LineAccount extends Model
         "messaging_user_id",
         "messaging_channel_access_token",
         "webhook_url",
+        "application_key",
         "is_enabled",
         "is_hidden",
     ];
@@ -27,5 +28,10 @@ class LineAccount extends Model
     public function line_callback_urls()
     {
         return $this->hasMany(LineCallbackUrl::class, "line_account_id", "id");
+    }
+
+    public function line_members()
+    {
+        return $this->hasMany(LineMember::class, "line_account_id", "id");
     }
 }

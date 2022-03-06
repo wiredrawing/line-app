@@ -15,6 +15,14 @@ class CreateLineBroadcastsTable extends Migration
     {
         Schema::create('line_broadcasts', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger("line_message_id");
+            $table->bigInteger("line_account_id");
+            $table->string("line_member_sub");
+            //-----------------------------------------
+            // メッセージは配信予定日を設定できるが
+            // 実際に配信された時間を保持させる
+            //-----------------------------------------
+            $table->dateTime("delivered_at");
             $table->timestamps();
         });
     }
