@@ -30,7 +30,9 @@ class LoginController extends Controller
                 "is_enabled" =>  Config("const.binary_type.on"),
                 "is_hidden" => Config("const.binary_type.off"),
             ])
+            ->whereHas("line_callback_urls")
             ->get();
+
             return view("line.login.list", $line_accounts);
         } catch (\Exception $e) {
             return response()->view("errors.index", [

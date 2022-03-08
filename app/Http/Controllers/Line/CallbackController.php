@@ -129,7 +129,15 @@ class CallbackController extends Controller
     public function completed(CallbackRequest $request, int $line_account_id)
     {
         try {
-            return view("line.callback.completed");
+            $validated = $request->validated();
+            // --------------------------------------------
+            // 実際は本webアプリケーションを利用する側のサイトへ
+            // ?api_token=something というqueryをともなって
+            // リダイレクトさせる
+            // --------------------------------------------
+            return view("line.callback.completed", [
+                "validated" => $validated,
+            ]);
         } catch (\Exception $e) {
             return view("errors.index", [
                 "e" => $e,
