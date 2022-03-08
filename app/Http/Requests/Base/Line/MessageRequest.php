@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Line;
+namespace App\Http\Requests\Base\Line;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +28,7 @@ class MessageRequest extends FormRequest
 
         $rules = [];
         if ($this->isMethod("post")) {
-            if ($current_route === "line.message.reserve") {
+            if ($current_route === "api.line.message.reserve") {
                 $rules = [
                     "line_account_id" => [
                         "required",
@@ -54,10 +54,10 @@ class MessageRequest extends FormRequest
                     // 配信予定日は日時を厳格に指定するようにする
                     "delivery_datetime" => [
                         "required",
-                        "date_format:Y-m-d H:i:s",
+                        "date_format:Y-m-d H:i",
                     ]
                 ];
-            } elseif ($current_route === "line.message.pushing") {
+            } elseif ($current_route === "api.line.message.pushing") {
                 $rules = [
                     "line_account_id" => [
                         "required",

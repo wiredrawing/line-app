@@ -33,7 +33,9 @@ class LoginController extends Controller
             ->whereHas("line_callback_urls")
             ->get();
 
-            return view("line.login.list", $line_accounts);
+            return view("line.login.index", [
+                "line_accounts" => $line_accounts
+            ]);
         } catch (\Exception $e) {
             return response()->view("errors.index", [
                 "e" => $e,

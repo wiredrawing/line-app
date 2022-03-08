@@ -4,8 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Line\LoginController;
 use App\Http\Controllers\Line\LogoutController;
 use App\Http\Controllers\Line\CallbackController;
-use App\Http\Controllers\Line\MessageController;
-use Symfony\Component\Mime\MessageConverter;
+use App\Http\Controllers\Api\Line\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,11 +37,20 @@ Route::group(["prefix" => "line", "as" => "line."], function () {
     Route::get("/callback/completed/{line_account_id}", [CallbackController::class, "completed"])->name("callback.completed");
     // LINEアカウントからログアウトするURL
     Route::get("/logout", [LogoutController::class, "index"])->name("logout.index");
+});
 
-    Route::group(["prefix" => "message", "as" => "message."], function () {
-        // 指定したLINEユーザーにメッセージをPushする
-        Route::post("/pushing/{line_account_id}", [MessageController::class, "pushing"])->name("pushing");
-        // 任意のメッセージを作成および予約日時を指定する
-        Route::post("/reserve/{line_account_id}", [MessageController::class, "reserve"])->name("reserve");
+
+// -------------------------------------------------------------------------
+// API用ルーティンググループ
+// あとでapi.phpに分ける
+// -------------------------------------------------------------------------
+Route::group(["prefix" => "api", "as" => "api."], function () {
+    Route::group(["prefix" => "line", "as" => "line."], function () {
+        Route::group(["prefix" => "message", "as" => "message."], function () {
+            // 指定したLINEユーザーにメッセージをPushする
+            Route::post("/pushing/{line_account_id}", [MessageController::class, "pushing"])->name("pushing");
+            // 任意のメッセージを作成および予約日時を指定する
+            Route::post("/reserve/{line_account_id}", [MessageController::class, "reserve"])->name("reserve");
+        });
     });
 });

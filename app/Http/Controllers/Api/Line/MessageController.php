@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Line;
+namespace App\Http\Controllers\Api\Line;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Line\MessageRequest;
+use App\Http\Requests\Base\Line\MessageRequest;
 use App\Models\LineMember;
 use App\Models\LineMessage;
 use Illuminate\Support\Facades\Http;
@@ -24,9 +24,22 @@ class MessageController extends Controller
         try {
             $validated = $request->validated();
 
-            $line_message = LineMessage::create($validated);
+            $insert_messages = [];
 
-            if ($line_message === null) {
+            foreach ($validated["messages"] as $key => $value) {
+                $insert_messages[] = [
+                    "line_account_id" => $validated["line_account_id"],
+                    "delivery_datetime" => $validated["delivery_datetime"],
+                    "type" => $value["type"],
+                    "text" => $value["text"],
+                    "created_at" => date("Y-m-d H:i:s"),
+                    "updated_at" => date("Y-m-d H:i:s"),
+                ];
+            }
+
+            $response = LineMessage::insert($insert_messages);
+
+            if ($response !== true) {
                 throw new \Exception("メッセージの予約に失敗しました");
             }
         } catch (\Exception $e) {
