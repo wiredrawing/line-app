@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Line;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Base\Line\MessageRequest;
+use App\Http\Requests\Api\Line\MessageRequest;
 use App\Models\LineMember;
 use App\Models\LineMessage;
 use Illuminate\Support\Facades\Http;
@@ -28,21 +28,33 @@ class MessageController extends Controller
 
             foreach ($validated["messages"] as $key => $value) {
                 $insert_messages[] = [
-                    "line_account_id" => $validated["line_account_id"],
+                    "line_account_id" => (int)$validated["line_account_id"],
                     "delivery_datetime" => $validated["delivery_datetime"],
                     "type" => $value["type"],
                     "text" => $value["text"],
-                    "created_at" => date("Y-m-d H:i:s"),
-                    "updated_at" => date("Y-m-d H:i:s"),
                 ];
             }
 
-            $response = LineMessage::insert($insert_messages);
+            $line_messages = [];
+            foreach ($insert_messages as $key => $value) {
+                $result = LineMessage::create($value);
+                if ($result === null) {
+                    throw new \Exception("LINEメッセージの予約投稿に失敗しました");
+                }
+                $line_messages[] = $result;
+            }
 
-            if ($response !== true) {
+
+            if (count($line_messages) === 0) {
                 throw new \Exception("メッセージの予約に失敗しました");
             }
+
+            return response()->json([
+                "status" => true,
+                "response" => $line_messages,
+            ]);
         } catch (\Exception $e) {
+            logger()->error($e);
             return view("errors.index", [
                 "e" => $e,
             ]);

@@ -41,6 +41,7 @@ class MessageRequest extends FormRequest
                     "messages" => [
                         "required",
                         "array",
+                        "between:1,5"
                     ],
                     "messages.*.type" => [
                         "required",
