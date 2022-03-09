@@ -34,10 +34,6 @@ class MessageRequest extends FormRequest
                         "required",
                         "integer",
                     ],
-                    "api_token" => [
-                        "required",
-                        "string",
-                    ],
                     "messages" => [
                         "required",
                         "array",
@@ -84,6 +80,23 @@ class MessageRequest extends FormRequest
                 ];
             }
         } elseif ($this->isMethod("get")) {
+
+            // 未送信のメッセージ一覧を取得する
+            if ($current_route === "api.line.message.unsent") {
+                $rules = [
+                    "line_account_id" => [
+                        "required",
+                        "integer",
+                    ]
+                ];
+            } elseif ($current_route === "api.line.message.sent") {
+                $rules = [
+                    "line_account_id" => [
+                        "required",
+                        "integer",
+                    ]
+                ];
+            }
         }
 
 

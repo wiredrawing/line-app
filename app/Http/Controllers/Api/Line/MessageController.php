@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Line\MessageRequest;
 use App\Models\LineMember;
 use App\Models\LineMessage;
+use App\Models\LineReserve;
 use Illuminate\Support\Facades\Http;
 
 class MessageController extends Controller
@@ -24,12 +25,24 @@ class MessageController extends Controller
         try {
             $validated = $request->validated();
 
+            // ----------------------------------------------
+            // LINE配信予約レコードを作成する
+            // ----------------------------------------------
+            $line_reserve = LineReserve::create([
+                "line_account_id" => $validated["line_account_id"],
+                "delivery_datetime" => $validated["delivery_datetime"]
+            ]);
+            if ($line_reserve === null) {
+                throw new \Exception("LINEの予約配信受付に失敗しました");
+            }
+            // last sequenceを取得
+            $last_line_reserve_id = $line_reserve->id;
+
             $insert_messages = [];
 
             foreach ($validated["messages"] as $key => $value) {
                 $insert_messages[] = [
-                    "line_account_id" => (int)$validated["line_account_id"],
-                    "delivery_datetime" => $validated["delivery_datetime"],
+                    "line_reserve_id" => $last_line_reserve_id,
                     "type" => $value["type"],
                     "text" => $value["text"],
                 ];
@@ -61,6 +74,73 @@ class MessageController extends Controller
         }
     }
 
+    /**
+     * 現時点で未配信のメッセージ一覧を取得する
+     *
+     * @param MessageRequest $request
+     * @param integer $line_account_id
+     * @return void
+     */
+    public function unsentMessages(MessageRequest $request, int $line_account_id)
+    {
+        try {
+            $validated = $request->validated();
+            $line_reserves = LineReserve::with([
+                "line_messages",
+            ])
+            ->whereHas("line_messages")
+            ->where("line_account_id", $validated["line_account_id"])
+            ->where("is_sent", Config("const.binary_type.off"))
+            ->where("delivery_datetime", ">=", date("Y-m-d H:i:s"))
+            ->get();
+
+            $response = [
+                "status" => true,
+                "response" => $line_reserves,
+            ];
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logger()->error($e);
+            return view("errors.index", [
+                "e" => $e,
+            ]);
+        }
+    }
+
+    /**
+     * 現時点で配信済みのメッセージ一覧を取得する
+     *
+     * @param MessageRequest $request
+     * @param integer $line_account_id
+     * @return void
+     */
+    public function sentMessages(MessageRequest $request, int $line_account_id)
+    {
+        try {
+            $validated = $request->validated();
+            $line_reserves = LineReserve::with([
+                "line_messages",
+            ])
+            ->whereHas("line_messages")
+            ->where("line_account_id", $validated["line_account_id"])
+            // 配信予定日時が過去のレコード
+            ->where("delivery_datetime", "<=", date("Y-m-d H:i:s"))
+            // 配信完了フラグがOnのもののみ
+            ->where("is_sent", Config("const.binary_type.on"))
+            ->get();
+
+            $response = [
+                "status" => true,
+                "response" => $line_reserves,
+            ];
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logger()->error($e);
+            return view("errors.index", [
+                "e" => $e,
+            ]);
+        }
+    }
 
     /**
      * 指定したlineユーザーに指定したメッセージをPush通知する
@@ -108,6 +188,7 @@ class MessageController extends Controller
             // pushメッセージのレスポンスは空のjsonオブジェクトを返却する
             $response = $response->json();
         } catch (\Exception $e) {
+            logger()->error($e);
             return view("errors.index", [
                 "e" => $e,
             ]);

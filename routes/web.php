@@ -51,6 +51,10 @@ Route::group(["prefix" => "api", "as" => "api."], function () {
             Route::post("/pushing/{line_account_id}", [MessageController::class, "pushing"])->name("pushing");
             // 任意のメッセージを作成および予約日時を指定する
             Route::post("/reserve/{line_account_id}", [MessageController::class, "reserve"])->name("reserve");
+            // リクエスト時点で未送信のメッセージ一覧を取得する
+            Route::get("unsent/{line_account_id}", [MessageController::class, "unsentMessages"])->name("unsent");
+            // リクエスト時点で配信済みのメッセージ一覧を取得する
+            Route::get("sent/{line_account_id}", [MessageController::class, "sentMessages"])->name("sent");
         });
     });
 });

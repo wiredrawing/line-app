@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Line;
 use App\Models\LineAccount;
 use App\Models\LineMember;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Line\LoginRequest;
+use App\Http\Requests\Base\Line\LoginRequest;
+
+;
 use App\Libraries\RandomToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;

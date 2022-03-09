@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Line;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Line\CallbackRequest;
+use App\Http\Requests\Base\Line\CallbackRequest;
 use App\Models\LineAccount;
 use App\Models\LineMember;
 use Illuminate\Http\Request;

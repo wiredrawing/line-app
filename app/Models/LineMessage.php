@@ -11,9 +11,20 @@ class LineMessage extends Model
 
 
     public $fillable = [
-        "line_account_id",
+        "line_reserve_id",
         "type",
         "text",
-        "delivery_datetime",
     ];
+
+
+
+    /**
+     * 予約のメッセージが紐づくline_reservesテーブルのレコード
+     *
+     * @return void
+     */
+    public function line_reserve()
+    {
+        return $this->belongsTo(LineReserve::class, "id", "line_reserve_id");
+    }
 }
