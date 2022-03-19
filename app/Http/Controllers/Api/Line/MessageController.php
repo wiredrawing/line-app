@@ -25,6 +25,8 @@ class MessageController extends Controller
         try {
             $validated = $request->validated();
 
+            logger()->info($validated);
+
             // ----------------------------------------------
             // LINE配信予約レコードを作成する
             // ----------------------------------------------
@@ -149,7 +151,7 @@ class MessageController extends Controller
      * @param integer $line_account_id
      * @return void
      */
-    public function pushing(MessageRequest $request, int $line_reserve_id)
+    public function push(MessageRequest $request, int $line_reserve_id)
     {
         try {
             $validated = $request->validated();
@@ -205,6 +207,19 @@ class MessageController extends Controller
                 // pushメッセージのレスポンスは空のjsonオブジェクトを返却する
                 $response = $response->json();
                 logger()->info($response);
+            }
+
+            // --------------------------------------------------
+            // 送信した $line_reserveの送信完了フラグをOnにする
+            // --------------------------------------------------
+            $result = LineReserve::where([
+                "id" => $validated["line_reserve_id"],
+            ])
+            ->update([
+                "is_sent" => Config("const.binary_type.on")
+            ]);
+            if ($result !== true) {
+                throw new \Exception("LINE予約を送信済みに変更することができませんでした");
             }
             // $line_member = LineMember::with([
             //     "line_account",

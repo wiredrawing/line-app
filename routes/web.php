@@ -48,7 +48,7 @@ Route::group(["prefix" => "api", "as" => "api."], function () {
     Route::group(["prefix" => "line", "as" => "line."], function () {
         Route::group(["prefix" => "message", "as" => "message."], function () {
             // 指定したLINEユーザーにメッセージをPushする
-            Route::post("/pushing/{line_reserve_id}", [MessageController::class, "pushing"])->name("pushing");
+            Route::post("/push/{line_reserve_id}", [MessageController::class, "push"])->name("pushing");
             // 任意のメッセージを作成および予約日時を指定する
             Route::post("/reserve/{line_account_id}", [MessageController::class, "reserve"])->name("reserve");
             // リクエスト時点で未送信のメッセージ一覧を取得する
