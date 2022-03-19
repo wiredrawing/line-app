@@ -56,27 +56,10 @@ class MessageRequest extends FormRequest
                 ];
             } elseif ($current_route === "api.line.message.pushing") {
                 $rules = [
-                    "line_account_id" => [
+                    "line_reserve_id" => [
                         "required",
                         "integer",
                     ],
-                    "api_token" => [
-                        "required",
-                        "string",
-                    ],
-                    "messages" => [
-                        "required",
-                        "array",
-                    ],
-                    "messages.*.type" => [
-                        "required",
-                        "string",
-                    ],
-                    "messages.*.text" => [
-                        "required",
-                        "string",
-                        "between:1,4000"
-                    ]
                 ];
             }
         } elseif ($this->isMethod("get")) {

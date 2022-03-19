@@ -143,55 +143,110 @@ class MessageController extends Controller
     }
 
     /**
-     * 指定したlineユーザーに指定したメッセージをPush通知する
+     * 指定したline_reserve_idのレコードを指定したLINEユーザーへ配信する
      *
      * @param MessageRequest $request
      * @param integer $line_account_id
      * @return void
      */
-    public function pushing(MessageRequest $request, int $line_account_id)
+    public function pushing(MessageRequest $request, int $line_reserve_id)
     {
         try {
             $validated = $request->validated();
 
-            $line_member = LineMember::with([
-                "line_account",
+            $line_reserve = LineReserve::with([
+                "line_messages",
             ])
-            ->where([
-                "line_account_id" => $validated["line_account_id"],
-                "api_token" => $validated["api_token"],
-            ])
-            ->whereHas("line_account")
+            ->where("id", $validated["line_reserve_id"])
+            ->where("is_displayed", Config("const.binary_type.on"))
+            ->where("is_sent", Config("const.binary_type.off"))
+            ->whereHas("line_messages")
             ->get()
             ->first();
 
-            if ($line_member === null) {
-                throw new \Exception("指定したLINEユーザーが見つかりません");
+            if ($line_reserve === null) {
+                throw new \Exception("指定したLINE予約メッセージが見つかりません");
+            }
+            $messages_to_push = [];
+            foreach ($line_reserve->line_messages as $index => $message) {
+                $messages_to_push[] = $message->toArray();
             }
 
-            // --------------------------------------------------------------------
-            // Laravel HTTPクライアントを使ってpushメッセージを送信する
-            // --------------------------------------------------------------------
-            $response = Http::withHeaders([
-                "Content-Type" => "application/json",
-                "Authorization" => "Bearer {$line_member->line_account->messaging_channel_access_token}",
-            ])->post(Config("const.line_login.push"), [
-                "to" => $line_member->sub,
-                "messages" => $validated["messages"],
-            ]);
-            $response->throw();
+            // 指定したLINE予約から対象のLINEチャンネルと紐づくLINEメンバーを取得
+            $line_members = LineMember::with([
+                "line_account",
+            ])->where([
+                "line_account_id" => $line_reserve->line_account_id,
+            ])
+            ->get();
 
-            // httpリクエストが成功したかどうかを検証
-            if ($response->successful() !== true) {
-                throw new \Exception("LINE側からユーザー情報の取得に失敗しました");
+            if ($line_members->count() === 0) {
+                throw new \Exception("指定したLINE予約を受け取れるLINEメンバーがいません");
             }
-            // pushメッセージのレスポンスは空のjsonオブジェクトを返却する
-            $response = $response->json();
+
+            foreach ($line_members as $index => $member) {
+                // --------------------------------------------------------------------
+                // Laravel HTTPクライアントを使ってpushメッセージを送信する
+                // --------------------------------------------------------------------
+                $response = Http::withHeaders([
+                    "Content-Type" => "application/json",
+                    "Authorization" => "Bearer {$member->line_account->messaging_channel_access_token}",
+                ])->post(Config("const.line_login.push"), [
+                    "to" => $member->sub,
+                    "messages" => $messages_to_push,
+                ]);
+                $response->throw();
+
+                // httpリクエストが成功したかどうかを検証
+                if ($response->successful() !== true) {
+                    logger()->error("LINEメッセージの送信に失敗しました");
+                    throw new \Exception();
+                }
+                // pushメッセージのレスポンスは空のjsonオブジェクトを返却する
+                $response = $response->json();
+                logger()->info($response);
+            }
+            // $line_member = LineMember::with([
+            //     "line_account",
+            // ])
+            // ->where([
+            //     "line_account_id" => $validated["line_account_id"],
+            //     "api_token" => $validated["api_token"],
+            // ])
+            // ->whereHas("line_account")
+            // ->get()
+            // ->first();
+
+            // if ($line_member === null) {
+            //     throw new \Exception("指定したLINEユーザーが見つかりません");
+            // }
+
+            // // --------------------------------------------------------------------
+            // // Laravel HTTPクライアントを使ってpushメッセージを送信する
+            // // --------------------------------------------------------------------
+            // $response = Http::withHeaders([
+            //     "Content-Type" => "application/json",
+            //     "Authorization" => "Bearer {$line_member->line_account->messaging_channel_access_token}",
+            // ])->post(Config("const.line_login.push"), [
+            //     "to" => $line_member->sub,
+            //     "messages" => $validated["messages"],
+            // ]);
+            // $response->throw();
+
+            // // httpリクエストが成功したかどうかを検証
+            // if ($response->successful() !== true) {
+            //     throw new \Exception("LINE側からユーザー情報の取得に失敗しました");
+            // }
+            // // pushメッセージのレスポンスは空のjsonオブジェクトを返却する
+            // $response = $response->json();
         } catch (\Exception $e) {
+            $json = [
+                "status" => false,
+                "response" => null,
+                "error" => $e->getMessage(),
+            ];
             logger()->error($e);
-            return view("errors.index", [
-                "e" => $e,
-            ]);
+            return response()->json($json);
         }
     }
 }
