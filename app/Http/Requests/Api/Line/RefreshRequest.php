@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests\Api\Line;
 
-use App\Http\Requests\Base\Line\MessageRequest as BaseMessageRequest;
+use App\Http\Requests\Base\Line\RefreshRequest as BaseRefreshRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class MessageRequest extends BaseMessageRequest
+class RefreshRequest extends BaseRefreshRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -17,10 +17,6 @@ class MessageRequest extends BaseMessageRequest
     {
         return true;
     }
-
-
-
-
 
     /**
      * APIとしてリクエストされた場合の例外のスロー

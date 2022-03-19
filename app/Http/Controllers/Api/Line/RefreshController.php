@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Line;
+namespace App\Http\Controllers\Api\Line;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Base\Line\RefreshRequest;
@@ -20,8 +20,12 @@ class RefreshController extends Controller
     public function index(RefreshRequest $request)
     {
         try {
-            $validated = $request->validated();
+            // --------------------------------------
+            // 指定したLINEメンバーのアクセストークン更新開始
+            // --------------------------------------
+            logger()->info("start updating access token.");
 
+            $validated = $request->validated();
 
             $line_member = LineMember::with([
                 "line_account"
@@ -69,6 +73,8 @@ class RefreshController extends Controller
             if ($response !== true) {
                 throw new \Exception("LINEメンバーのアクセストークンの更新処理が失敗しました");
             }
+
+            logger()->info("completed updating access token.");
 
             $response = [
                 "status" => true,

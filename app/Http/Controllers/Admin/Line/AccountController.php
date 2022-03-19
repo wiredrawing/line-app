@@ -31,4 +31,27 @@ class AccountController extends Controller
             logger()->error($e);
         }
     }
+
+
+    /**
+     * 指定したLINEアカウントの詳細を表示する
+     *
+     * @param Request $request
+     * @param integer $line_account_id
+     * @return void
+     */
+    public function detail(Request $request, int $line_account_id)
+    {
+        try {
+            $validated = $request->validated();
+            $line_accounts = LineAccount::findOrFail($validated["line_account_id"]);
+
+
+            return view("admin.line.account", [
+                "line_accounts" => $line_accounts,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e);
+        }
+    }
 }

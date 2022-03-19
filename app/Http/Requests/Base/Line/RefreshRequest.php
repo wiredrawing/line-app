@@ -5,6 +5,7 @@ namespace App\Http\Requests\Base\Line;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
+
 class RefreshRequest extends FormRequest
 {
     /**
@@ -26,13 +27,19 @@ class RefreshRequest extends FormRequest
     {
         $current_route = Route::currentRouteName();
         $method = strtoupper($this->getMethod());
-        $rules = [
-            "api_token" => [
-                "required",
-                "string",
-                Rule::exists("line_members", "api_token"),
-            ]
-        ];
+        $rules = [];
+
+        if ($method === "POST") {
+            if ($current_route === "api.line.refresh.index") {
+                $rules = [
+                    "api_token" => [
+                        "required",
+                        "string",
+                        Rule::exists("line_members", "api_token"),
+                    ]
+                ];
+            }
+        }
 
 
         return $rules;

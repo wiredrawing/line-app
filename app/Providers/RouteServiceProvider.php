@@ -53,12 +53,12 @@ class RouteServiceProvider extends ServiceProvider
             // -------------------------------------
             // 非APIルーティング
             Route::prefix("admin")
-                ->middleware("admin")
+                ->middleware("check.login.admin")
                 ->namespace($this->namespace)
                 ->group(base_path("routes/admin/web.php"));
             // 管理画面側APIのルーティング
             Route::prefix("admin/api")
-                ->middleware("admin")
+                ->middleware("check.login.admin")
                 ->namespace($this->namespace)
                 ->group(base_path("routes/admin/api.php"));
         });

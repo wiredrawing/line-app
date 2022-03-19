@@ -66,6 +66,6 @@ class Kernel extends HttpKernel
         // -------------------------------------------------
         // 以下独自ミドルウェア
         // -------------------------------------------------
-        "admin" => \App\Http\Middleware\CheckLoginAdminUrl::class,
+        "check.login.admin" => \App\Http\Middleware\CheckLoginAdminUrl::class,
     ];
 }

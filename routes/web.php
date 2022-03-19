@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Line\LoginController;
 use App\Http\Controllers\Line\LogoutController;
 use App\Http\Controllers\Line\CallbackController;
-use App\Http\Controllers\Line\RefreshController;
+use App\Http\Controllers\Api\Line\RefreshController;
 use App\Http\Controllers\Api\Line\MessageController;
 
 /*
@@ -38,10 +38,6 @@ Route::group(["prefix" => "line", "as" => "line."], function () {
     Route::get("/callback/completed/{line_account_id}", [CallbackController::class, "completed"])->name("callback.completed");
     // LINEアカウントからログアウトするURL
     Route::get("/logout", [LogoutController::class, "index"])->name("logout.index");
-    // 登録済みLINEメンバーアカウントのアクセストークンの更新
-    Route::post("/refresh", [
-        RefreshController::class, "index"
-    ])->name("refresh.index");
 });
 
 
@@ -61,5 +57,9 @@ Route::group(["prefix" => "api", "as" => "api."], function () {
             // リクエスト時点で配信済みのメッセージ一覧を取得する
             Route::get("sent/{line_account_id}", [MessageController::class, "sentMessages"])->name("sent");
         });
+        // 登録済みLINEメンバーアカウントのアクセストークンの更新
+        Route::post("/refresh", [
+            RefreshController::class, "index"
+        ])->name("refresh.index");
     });
 });
