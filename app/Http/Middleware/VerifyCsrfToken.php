@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         "api/line/message/push/*",
         "api/line/message/reserve/*",
+        "line/refresh",
     ];
 }

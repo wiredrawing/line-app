@@ -189,14 +189,21 @@ class MessageController extends Controller
             foreach ($line_members as $index => $member) {
                 // --------------------------------------------------------------------
                 // Laravel HTTPクライアントを使ってpushメッセージを送信する
+                // ここで使用するAPIエンドポイントはLINEアカウント側のアクセストークンを利用する
+                // ※LINEユーザーのアクセストークンは使わない
                 // --------------------------------------------------------------------
+                $messages_to_member = [
+                    "to" => $member->sub,
+                    "messages" => $messages_to_push,
+                ];
                 $response = Http::withHeaders([
                     "Content-Type" => "application/json",
                     "Authorization" => "Bearer {$member->line_account->messaging_channel_access_token}",
-                ])->post(Config("const.line_login.push"), [
-                    "to" => $member->sub,
-                    "messages" => $messages_to_push,
-                ]);
+                ])->post(Config("const.line_login.push"), $messages_to_member);
+
+                // 送信先メンバーをログに残す
+                logger()->info($messages_to_member);
+
                 $response->throw();
 
                 // httpリクエストが成功したかどうかを検証
