@@ -54,7 +54,7 @@ class MessageRequest extends FormRequest
                         "date_format:Y-m-d H:i",
                     ]
                 ];
-            } elseif ($current_route === "api.line.message.pushing") {
+            } elseif ($current_route === "api.line.message.push") {
                 $rules = [
                     "line_reserve_id" => [
                         "required",

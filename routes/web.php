@@ -49,7 +49,7 @@ Route::group(["prefix" => "api", "as" => "api."], function () {
     Route::group(["prefix" => "line", "as" => "line."], function () {
         Route::group(["prefix" => "message", "as" => "message."], function () {
             // 指定したLINEユーザーにメッセージをPushする
-            Route::post("/push/{line_reserve_id}", [MessageController::class, "push"])->name("pushing");
+            Route::post("/push/{line_reserve_id}", [MessageController::class, "push"])->name("push");
             // 任意のメッセージを作成および予約日時を指定する
             Route::post("/reserve/{line_account_id}", [MessageController::class, "reserve"])->name("reserve");
             // リクエスト時点で未送信のメッセージ一覧を取得する
@@ -57,7 +57,10 @@ Route::group(["prefix" => "api", "as" => "api."], function () {
             // リクエスト時点で配信済みのメッセージ一覧を取得する
             Route::get("sent/{line_account_id}", [MessageController::class, "sentMessages"])->name("sent");
         });
+        // ----------------------------------------------------------
         // 登録済みLINEメンバーアカウントのアクセストークンの更新
+        // 定期実行用処理
+        // ----------------------------------------------------------
         Route::post("/refresh", [
             RefreshController::class, "index"
         ])->name("refresh.index");

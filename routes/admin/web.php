@@ -4,8 +4,7 @@
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\Admin\Line\AccountController;
-use App\Http\Controllers\Admin\Line\MessageController;
-use GuzzleHttp\Psr7\Message;
+use App\Http\Controllers\Admin\Line\ReserveController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(["prefix" => "/", "as" => "admin."], function () {
@@ -42,20 +41,20 @@ Route::group(["prefix" => "/", "as" => "admin."], function () {
         ])->name("account");
 
         // LINEメッセージ関連のURL
-        Route::group(["prefix" => "message", "as" => "message."], function () {
+        Route::group(["prefix" => "reserve", "as" => "reserve."], function () {
             // 全メッセージ一覧
             Route::get("/", [
-                MessageController::class, "index"
+                ReserveController::class, "index"
             ])->name("index");
 
-            // 予約済みメッセージ一覧
-            Route::get("/reserved", [
-                MessageController::class, "reserved"
-            ])->name("reserved");
+            // 指定したline_reserve_idのメッセージ詳細を取得する
+            Route::get("/detail/{line_reserve_id}", [
+                ReserveController::class, "detail"
+            ])->name("detail");
 
             // 送信済みメッセージ一覧
             Route::get("/sent", [
-                MessageController::class, "sent"
+                ReserveController::class, "sent"
             ])->name("sent");
         });
     });
