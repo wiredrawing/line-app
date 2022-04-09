@@ -3,24 +3,24 @@
 namespace App\Http\Controllers\Api\Line;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Line\MessageRequest;
+use App\Http\Requests\Api\Line\ReserveRequest;
 use App\Models\LineMember;
 use App\Models\LineMessage;
 use App\Models\LineReserve;
 use Illuminate\Support\Facades\Http;
 
-class MessageController extends Controller
+class ReserveController extends Controller
 {
 
 
     /**
      * 指定したLINEアカウントでメッセージを予約する
      *
-     * @param MessageRequest $request
+     * @param ReserveRequest $request
      * @param integer $line_account_id
      * @return void
      */
-    public function reserve(MessageRequest $request, int $line_account_id)
+    public function reserve(ReserveRequest $request, int $line_account_id)
     {
         try {
             $validated = $request->validated();
@@ -79,11 +79,11 @@ class MessageController extends Controller
     /**
      * 現時点で未配信のメッセージ一覧を取得する
      *
-     * @param MessageRequest $request
+     * @param ReserveRequest $request
      * @param integer $line_account_id
      * @return void
      */
-    public function unsentMessages(MessageRequest $request, int $line_account_id)
+    public function unsentMessages(ReserveRequest $request, int $line_account_id)
     {
         try {
             $validated = $request->validated();
@@ -112,11 +112,11 @@ class MessageController extends Controller
     /**
      * 現時点で配信済みのメッセージ一覧を取得する
      *
-     * @param MessageRequest $request
+     * @param ReserveRequest $request
      * @param integer $line_account_id
      * @return void
      */
-    public function sentMessages(MessageRequest $request, int $line_account_id)
+    public function sentMessages(ReserveRequest $request, int $line_account_id)
     {
         try {
             $validated = $request->validated();
@@ -147,11 +147,11 @@ class MessageController extends Controller
     /**
      * 指定したline_reserve_idのレコードを指定したLINEユーザーへ配信する
      *
-     * @param MessageRequest $request
+     * @param ReserveRequest $request
      * @param integer $line_account_id
      * @return void
      */
-    public function push(MessageRequest $request, int $line_reserve_id)
+    public function push(ReserveRequest $request, int $line_reserve_id)
     {
         try {
             $validated = $request->validated();

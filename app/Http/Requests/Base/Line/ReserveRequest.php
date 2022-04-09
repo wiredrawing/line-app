@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests\Base\Line;
 
+use App\Models\LineAccount;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Route;
 
-class MessageRequest extends FormRequest
+class ReserveRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,11 +29,29 @@ class MessageRequest extends FormRequest
 
         $rules = [];
         if ($this->isMethod("post")) {
-            if ($current_route === "api.line.message.reserve") {
+            if ($current_route === "api.line.reserve.reserve") {
                 $rules = [
                     "line_account_id" => [
                         "required",
                         "integer",
+                    ],
+                    "api_token" => [
+                        "required",
+                        "string",
+                        function ($attribute, $value, $fail) {
+                            // ----------------------------------------------------
+                            // line_account_idとline_accounts.api_tokenの
+                            // 組み合わせを検証する
+                            // ----------------------------------------------------
+                            $line_account = LineAccount::where([
+                                "api_token" => $value,
+                                "is_enabled" => Config("const.binary_type.on"),
+                            ])
+                            ->find($this->route()->parameter("line_account_id"));
+                            if ($line_account === null) {
+                                $fail("Could not find record which specified.");
+                            }
+                        }
                     ],
                     "messages" => [
                         "required",
@@ -54,7 +73,7 @@ class MessageRequest extends FormRequest
                         "date_format:Y-m-d H:i",
                     ]
                 ];
-            } elseif ($current_route === "api.line.message.push") {
+            } elseif ($current_route === "api.line.reserve.push") {
                 $rules = [
                     "line_reserve_id" => [
                         "required",
@@ -65,14 +84,14 @@ class MessageRequest extends FormRequest
         } elseif ($this->isMethod("get")) {
 
             // 未送信のメッセージ一覧を取得する
-            if ($current_route === "api.line.message.unsent") {
+            if ($current_route === "api.line.reserve.unsent") {
                 $rules = [
                     "line_account_id" => [
                         "required",
                         "integer",
                     ]
                 ];
-            } elseif ($current_route === "api.line.message.sent") {
+            } elseif ($current_route === "api.line.reserve.sent") {
                 $rules = [
                     "line_account_id" => [
                         "required",
@@ -86,11 +105,20 @@ class MessageRequest extends FormRequest
         return $rules;
     }
 
-    public function validationData()
+
+    /**
+     * バリデーション対象のデータをここで構築する
+     *
+     * @return array
+     */
+    public function validationData():array
     {
-        return array_merge(
+        $validation_data = array_merge(
             $this->all(),
+            $this->input(),
             $this->route()->parameters(),
         );
+        logger()->info($validation_data);
+        return $validation_data;
     }
 }

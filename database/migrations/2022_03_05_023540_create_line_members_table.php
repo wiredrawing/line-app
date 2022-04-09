@@ -24,6 +24,8 @@ class CreateLineMembersTable extends Migration
             $table->string("email");
             $table->string("picture");
             $table->string("name");
+            // 本アプリケーション上の表示フラグ
+            $table->tinyInteger("is_displayed")->default(1);
             // LINEプラットフォームが提供するLINEユーザーのID
             $table->string("sub");
             $table->string("aud");

@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\Admin\Line\AccountController;
 use App\Http\Controllers\Admin\Line\ReserveController;
+use App\Http\Controllers\Admin\Line\MemberController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(["prefix" => "/", "as" => "admin."], function () {
@@ -56,6 +57,20 @@ Route::group(["prefix" => "/", "as" => "admin."], function () {
             Route::get("/sent", [
                 ReserveController::class, "sent"
             ])->name("sent");
+        });
+
+        // LINEログイン済みメンバー情報
+        Route::group(["prefix" => "member", "as" => "member."], function () {
+
+            // メンバーページTOP
+            Route::get("/", [
+                MemberController::class, "index"
+            ])->name("index");
+
+            // 指定したline_member_idの詳細情報
+            Route::get("/detail/{line_member_id}", [
+                MemberController::class, "detail"
+            ])->name("detail");
         });
     });
 });

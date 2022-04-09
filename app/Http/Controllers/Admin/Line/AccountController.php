@@ -24,7 +24,7 @@ class AccountController extends Controller
             $line_accounts = LineAccount::all();
 
 
-            return view("admin.line.account", [
+            return view("admin.line.account.index", [
                 "line_accounts" => $line_accounts,
             ]);
         } catch (\Exception $e) {
@@ -44,11 +44,11 @@ class AccountController extends Controller
     {
         try {
             $validated = $request->validated();
-            $line_accounts = LineAccount::findOrFail($validated["line_account_id"]);
+            $line_account = LineAccount::findOrFail($validated["line_account_id"]);
 
 
-            return view("admin.line.account", [
-                "line_accounts" => $line_accounts,
+            return view("admin.line.account.detail", [
+                "line_account" => $line_account,
             ]);
         } catch (\Exception $e) {
             logger()->error($e);

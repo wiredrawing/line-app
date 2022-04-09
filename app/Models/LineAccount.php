@@ -19,6 +19,7 @@ class LineAccount extends Model
         "messaging_channel_secret",
         "messaging_user_id",
         "messaging_channel_access_token",
+        "api_token",
         "webhook_url",
         "application_key",
         "is_enabled",

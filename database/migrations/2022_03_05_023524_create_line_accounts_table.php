@@ -25,6 +25,8 @@ class CreateLineAccountsTable extends Migration
             $table->string("messaging_user_id", 512);
             $table->string("messaging_channel_access_token", 512)->nullable();
             $table->string("webhook_url", 512)->nullable();
+            // 本アプリケーション内でのみ使用するAPIトークン
+            $table->string("api_token")->nullable();
             // 本アプリケーションをある程度非公開にするためのアプリケーションキー
             $table->string("application_key", 512)->nullable();
             $table->tinyInteger("is_enabled")->default(1);

@@ -26,13 +26,13 @@ class LoginController extends Controller
     {
         try {
             $line_accounts = LineAccount::with([
-                "line_callback_urls",
+                // "line_callback_urls",
             ])
             ->where([
                 "is_enabled" =>  Config("const.binary_type.on"),
                 "is_hidden" => Config("const.binary_type.off"),
             ])
-            ->whereHas("line_callback_urls")
+            // ->whereHas("line_callback_urls")
             ->get();
 
             return view("line.login.index", [
@@ -63,12 +63,12 @@ class LoginController extends Controller
             $validated = $request->validated();
 
             $line_account = LineAccount::with([
-                "line_callback_urls",
+                // "line_callback_urls",
             ])
             ->where([
                 "application_key" => $application_key,
             ])
-            ->whereHas("line_callback_urls")
+            // ->whereHas("line_callback_urls")
             ->findOrFail($validated["line_account_id"]);
 
             // ユーザーの識別用のランダムトークン
@@ -89,7 +89,11 @@ class LoginController extends Controller
             $query_build = [
                 "response_type" => "code",
                 "client_id" => $line_account->channel_id,
-                "redirect_uri" => $line_account->line_callback_urls->first()->url."?api_token={$api_token}",
+                // LINEログイン完了後,戻ってくる本アプリケーションのURL
+                "redirect_uri" => route("line.callback.index", [
+                    "line_account_id" => $line_account->id,
+                    "api_token" => $api_token,
+                ]),
                 "scope" => "profile openid email",
                 "nonce" => hash("sha256", Str::uuid()),
                 "state" => hash("sha256", Str::uuid()),

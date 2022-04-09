@@ -17,11 +17,10 @@ class CallbackController extends Controller
      * LINEプラットフォームから取得した認可コードでログインユーザーの
      * アクセストークンを取得する
      *
-     * @param Request $request
-     * @param integer $line_account_id
+     * @param CallbackRequest $request
      * @return void
      */
-    public function index(CallbackRequest $request, int $line_account_id)
+    public function index(CallbackRequest $request)
     {
         try {
             // バリデーション後のGETおよびPOSTデータを取得
@@ -29,11 +28,16 @@ class CallbackController extends Controller
 
             // line_account_idから実行中のLINEアプリケーションを取得
             $line_account = LineAccount::with([
-                "line_callback_urls"
+                // "line_callback_urls"
             ])
-            ->whereHas("line_callback_urls")
+            // ->whereHas("line_callback_urls")
             ->findOrFail($validated_data["line_account_id"]);
 
+            // var_dump(route("line.callback.index", [
+            //     "line_account_id" => $line_account->id,
+            //     "api_token" => $validated_data["api_token"]
+            // ]));
+            // exit();
 
             // ----------------------------------------------------------------------
             // LINEプラットフォームから取得した認可コードを使ってaccess_tokenをリクエスト
@@ -41,7 +45,11 @@ class CallbackController extends Controller
             $response = Http::asForm()->post(Config("const.line_login.token"), [
                 "grant_type" => "authorization_code",
                 "code" => $validated_data["code"],
-                "redirect_uri" => $line_account->line_callback_urls->first()->url."?api_token={$validated_data["api_token"]}",
+                // "redirect_uri" => $line_account->line_callback_urls->first()->url."?api_token={$validated_data["api_token"]}",
+                "redirect_uri" => route("line.callback.index", [
+                    "line_account_id" => $line_account->id,
+                    "api_token" => $validated_data["api_token"]
+                ]),
                 "client_id" => $line_account->channel_id,
                 "client_secret" => $line_account->channel_secret,
             ]);
@@ -112,6 +120,8 @@ class CallbackController extends Controller
                 "api_token" => $validated_data["api_token"],
             ]);
         } catch (\Exception $e) {
+            logger()->error($e);
+            var_dump($e->getMessage());
             return view("errors.index", [
                 "e" => $e,
             ]);
@@ -123,10 +133,9 @@ class CallbackController extends Controller
      * LINE認証完了後に表示するページ
      *
      * @param CallbackRequest $request
-     * @param integer $line_account_id
      * @return void
      */
-    public function completed(CallbackRequest $request, int $line_account_id)
+    public function completed(CallbackRequest $request)
     {
         try {
             $validated = $request->validated();
@@ -139,6 +148,7 @@ class CallbackController extends Controller
                 "validated" => $validated,
             ]);
         } catch (\Exception $e) {
+            logger()->error($e);
             return view("errors.index", [
                 "e" => $e,
             ]);
