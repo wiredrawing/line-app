@@ -24,7 +24,9 @@ class MemberController extends Controller
         try {
             $line_members = LineMember::with([
                 "line_account",
-            ])->get();
+            ])
+            ->whereHas("line_account")
+            ->get();
 
             return view("admin.line.member.index", [
                 "line_members" => $line_members,
@@ -49,11 +51,15 @@ class MemberController extends Controller
         try {
             $line_member = LineMember::with([
                 "line_account",
-            ])->find($line_member_id);
+            ])
+            ->whereHas("line_account")
+            ->find($line_member_id);
             return view("admin.line.member.detail", [
                 "line_member" => $line_member,
             ]);
         } catch (\Exception $e) {
+            var_dump($e->getMessage());
+            logger()->error($e);
         }
     }
 }

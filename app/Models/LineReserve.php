@@ -17,9 +17,17 @@ class LineReserve extends Model
         "is_sent",
     ];
 
+    public $dates = [
+        "delivery_datetime",
+    ];
 
     public function line_messages()
     {
         return $this->hasMany(LineMessage::class, "line_reserve_id", "id");
+    }
+
+    public function line_broadcasts()
+    {
+        return $this->hasMany(LineBroadcast::class, "line_reserve_id", "id");
     }
 }
