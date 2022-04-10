@@ -36,10 +36,19 @@ Route::group(["prefix" => "/", "as" => "admin."], function () {
     // --------------------------------------------------
     Route::group(["prefix" => "line", "as" => "line."], function () {
 
-        // 登録済みのLINEアカウント一覧を取得
-        Route::get("/account", [
-            AccountController::class, "index"
-        ])->name("account");
+
+        // 公式LINEアカウント一覧
+        Route::group(["prefix" => "account", "as" => "account."], function () {
+            // 登録済みのLINEアカウント一覧を取得
+            Route::get("/", [
+                AccountController::class, "index"
+            ])->name("index");
+
+            // 任意のLINEアカウントを表示
+            Route::get("/detail/{line_account_id}", [
+                AccountController::class, "detail"
+            ])->name("detail");
+        });
 
         // LINEメッセージ関連のURL
         Route::group(["prefix" => "reserve", "as" => "reserve."], function () {
@@ -57,6 +66,11 @@ Route::group(["prefix" => "/", "as" => "admin."], function () {
             Route::get("/sent", [
                 ReserveController::class, "sent"
             ])->name("sent");
+
+            // 新規LINEメッセージの予約を作成する
+            Route::get("/register", [
+                ReserveController::class, "register",
+            ])->name("register");
         });
 
         // LINEログイン済みメンバー情報

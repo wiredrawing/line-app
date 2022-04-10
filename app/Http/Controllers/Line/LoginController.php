@@ -39,6 +39,7 @@ class LoginController extends Controller
                 "line_accounts" => $line_accounts
             ]);
         } catch (\Exception $e) {
+            logger()->error($e);
             return response()->view("errors.index", [
                 "e" => $e,
             ]);
@@ -62,17 +63,17 @@ class LoginController extends Controller
         try {
             $validated = $request->validated();
 
-            $line_account = LineAccount::with([
-                // "line_callback_urls",
-            ])
-            ->where([
+            $line_account = LineAccount::where([
                 "application_key" => $application_key,
             ])
-            // ->whereHas("line_callback_urls")
-            ->findOrFail($validated["line_account_id"]);
+            ->find($validated["line_account_id"]);
+
+            if ($line_account === null) {
+                throw new \Exception("指定したLINEアプリケーション用ログインページが見つかりませんでした");
+            }
 
             // ユーザーの識別用のランダムトークン
-            $api_token = RandomToken::MakeRandomToken();
+            $api_token = RandomToken::MakeRandomToken(128);
 
             // 同一のLINE channel_idでapi_tokenが重複しないかどうかを検証
             $line_member = LineMember::where([
@@ -102,6 +103,7 @@ class LoginController extends Controller
 
             return redirect(Config("const.line_login.authorize")."?".http_build_query($query_build));
         } catch (\Exception $e) {
+            logger()->error($e);
             return response()->view("errors.index", [
                 "e" => $e,
             ]);

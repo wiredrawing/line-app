@@ -102,4 +102,26 @@ class ReserveController extends Controller
             var_dump($e->getMessage());
         }
     }
+
+
+
+    /**
+     * 新規LINEメッセージを予約する
+     *
+     * @param ReserveRequest $request
+     * @return void
+     */
+    public function register(ReserveRequest $request)
+    {
+        try {
+
+            $validated = $request->validated();
+            logger()->info($validated);
+
+
+
+        } catch (\Exception $e) {
+            var_dump($e->getMessage());
+        }
+    }
 }
