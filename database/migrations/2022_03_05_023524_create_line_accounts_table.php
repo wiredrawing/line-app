@@ -32,6 +32,19 @@ class CreateLineAccountsTable extends Migration
             $table->tinyInteger("is_enabled")->default(1);
             $table->tinyInteger("is_hidden")->default(0);
             $table->timestamps();
+
+            // unique 制約
+            $table->unique("messaging_channel_access_token");
+            // LINEログインAPI系
+            $table->unique([
+                "channel_id",
+                "channel_secret",
+            ]);
+            // メッセージングAPI系
+            $table->unique([
+                "messaging_channel_id",
+                "messaging_channel_secret",
+            ]);
         });
     }
 

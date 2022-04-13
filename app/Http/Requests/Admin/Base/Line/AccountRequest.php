@@ -100,6 +100,10 @@ class AccountRequest extends FormRequest
                         "required",
                         "string",
                     ],
+                    "message_channel_access_token" => [
+                        "required",
+                        "string",
+                    ]
                 ];
             }
         } elseif ($this->isMethod("get")) {
