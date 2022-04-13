@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\Base\Line;
 
+use App\Models\LineAccount;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -25,13 +26,85 @@ class AccountRequest extends FormRequest
      */
     public function rules()
     {
-        $method = strtoupper($this->getMethod());
         $route_name = Route::currentRouteName();
         $rules = [];
 
-        if ($method === "POST") {
-        } elseif ($method === "GET") {
-            if ($route_name === "admin.line.account.index") {
+        if ($this->isMethod("post")) {
+            if ($route_name === "admin.api.line.account.create") {
+                $rules = [
+                    "channel_id" => [
+                        "required",
+                        "string",
+                        function ($attribute, $value, $fail) {
+                            $line_account = LineAccount::where([
+                                "channel_id" => $value,
+                                "channel_secret" => $this->input("channel_secret")
+                            ])
+                            ->get()
+                            ->first();
+                            if ($line_account !== null) {
+                                $fail("The account which you posted has already registered on the application.");
+                            }
+                        }
+                    ],
+                    "channel_secret" => [
+                        "required",
+                        "string",
+                        function ($attribute, $value, $fail) {
+                            $line_account = LineAccount::where([
+                                "channel_id" => $this->input("channel_id"),
+                                "channel_secret" => $value,
+                            ])
+                            ->get()
+                            ->first();
+                            if ($line_account !== null) {
+                                $fail("The account which you posted has already registered on the application.");
+                            }
+                        }
+                    ],
+                    "user_id" => [
+                        "required",
+                        "string",
+                    ],
+                    "messaging_channel_id" => [
+                        "required",
+                        "string",
+                        function ($attribute, $value, $fail) {
+                            $line_account = LineAccount::where([
+                                "messaging_channel_id" => $value,
+                                "messaging_channel_secret" => $this->input("messaging_channel_secret"),
+                            ])
+                            ->get()
+                            ->first();
+                            if ($line_account !== null) {
+                                $fail("The account which you posted has already registered on the application.");
+                            }
+                        }
+                    ],
+                    "messaging_channel_secret" => [
+                        "required",
+                        "string",
+                        function ($attribute, $value, $fail) {
+                            $line_account = LineAccount::where([
+                                "messaging_channel_id" => $this->input("messaging_channel_id"),
+                                "messaging_channel_secret" => $value,
+                            ])
+                            ->get()
+                            ->first();
+                            if ($line_account !== null) {
+                                $fail("The account which you posted has already registered on the application.");
+                            }
+                        }
+                    ],
+                    "messaging_user_id" => [
+                        "required",
+                        "string",
+                    ],
+                ];
+            }
+        } elseif ($this->isMethod("get")) {
+            if ($route_name === "admin.api.line.account.detail") {
+            } elseif ($route_name === "admin.line.account.index") {
             } elseif ($route_name === "admin.line.account.detail") {
                 $rules = [
                     "line_account_id" => [
@@ -42,7 +115,6 @@ class AccountRequest extends FormRequest
                 ];
             }
         }
-
 
         return $rules;
     }

@@ -163,7 +163,7 @@ class ReserveController extends Controller
      * 指定したline_reserve_idのレコードを指定したLINEユーザーへ配信する
      *
      * @param ReserveRequest $request
-     * @param integer $line_account_id
+     * @param integer $line_reserve_id
      * @return void
      */
     public function push(ReserveRequest $request, int $line_reserve_id)
@@ -298,5 +298,56 @@ class ReserveController extends Controller
             logger()->error($e);
             return response()->json($json);
         }
+    }
+
+
+    /**
+     * 任意の指定したLINEメッセージ予約を取得する
+     * (※フロントエンドの編集用データとして返却する)
+     *
+     * @param ReserveRequest $request
+     * @param integer $line_reserve_id
+     * @return void
+     */
+    public function fetchReserve(ReserveRequest $request, int $line_reserve_id = 0)
+    {
+        try {
+            $validated = $request->validated();
+            logger()->info($validated);
+
+            $line_reserve = LineReserve::with([
+                "line_messages",
+            ])
+            ->find($validated["line_reserve_id"]);
+
+
+            // application/json;charset=UTF-8 で返却する
+            $json = [
+                "status" => true,
+                "response" => $line_reserve,
+                "error" => null,
+            ];
+            return response()->json($json);
+        } catch (\Exception $e) {
+            logger()->error($e);
+            $json = [
+                "status" => false,
+                "response" => null,
+                "error" => $e->getMessage(),
+            ];
+            logger()->error($e);
+            return response()->json($json);
+        }
+    }
+
+    /**
+     * 指定したLINEメッセージ予約のアップデート用の処理
+     *
+     * @param ReserveRequest $request
+     * @param integer $line_reserve_id
+     * @return void
+     */
+    public function update(ReserveRequest $request, int $line_reserve_id = 0)
+    {
     }
 }

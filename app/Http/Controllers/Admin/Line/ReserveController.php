@@ -107,6 +107,7 @@ class ReserveController extends Controller
 
     /**
      * 新規LINEメッセージを予約する
+     * 登録処理自体はAPI側にまるごと委譲する
      *
      * @param ReserveRequest $request
      * @return void
@@ -114,12 +115,10 @@ class ReserveController extends Controller
     public function register(ReserveRequest $request)
     {
         try {
-
             $validated = $request->validated();
             logger()->info($validated);
 
-
-
+            return view("admin.line.reserve.register");
         } catch (\Exception $e) {
             var_dump($e->getMessage());
         }

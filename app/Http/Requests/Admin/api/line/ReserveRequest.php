@@ -5,6 +5,8 @@ namespace App\Http\Requests\Admin\Api\Line;
 use App\Models\LineAccount;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ReserveRequest extends FormRequest
 {
@@ -88,9 +90,8 @@ class ReserveRequest extends FormRequest
                 ];
             }
         } elseif ($this->isMethod("get")) {
-
-            // 未送信のメッセージ一覧を取得する
             if ($current_route === "admin.api.line.reserve.unsent") {
+                // 未送信のメッセージ一覧を取得する
                 $rules = [
                     "line_account_id" => [
                         "required",
@@ -103,6 +104,14 @@ class ReserveRequest extends FormRequest
                         "required",
                         "integer",
                     ]
+                ];
+            } elseif ($current_route === "admin.api.line.reserve.fetchReserve") {
+                $rules = [
+                    // 編集用に取得したいline_reservesのid
+                    "line_reserve_id" => [
+                        "required",
+                        "integer",
+                    ],
                 ];
             }
         }
@@ -126,5 +135,17 @@ class ReserveRequest extends FormRequest
         );
         logger()->info($validation_data);
         return $validation_data;
+    }
+
+
+    /**
+     * API実行時エラーをapplication/jsonで返却する
+     *
+     * @param Validator $validator
+     * @return void
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json($validator->errors), 422);
     }
 }

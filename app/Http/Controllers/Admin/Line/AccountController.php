@@ -33,6 +33,27 @@ class AccountController extends Controller
 
 
     /**
+     * 新規にLINEアカウントを作成する
+     *
+     * @param AccountRequest $request
+     * @return void
+     */
+    public function create(AccountRequest $request)
+    {
+        try {
+            $validated = $request->validated();
+
+            $line_account = LineAccount::create($validated);
+            if ($line_account === null) {
+                throw new \Exception("新規LINEアカウントの登録に失敗しました");
+            }
+        } catch (\Exception $e) {
+            logger()->error($e);
+        }
+    }
+
+
+    /**
      * 指定したLINEアカウントの詳細を表示する
      *
      * @param AccountRequest $request
