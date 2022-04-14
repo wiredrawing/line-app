@@ -38,6 +38,11 @@ Route::group(["prefix" => "/", "as" => "admin."], function () {
                     AccountController::class, "list"
                 ])->name("list");
 
+                // 新規でLINEアカウントを登録する前のバリデーションチェック
+                Route::post("/check", [
+                    AccountController::class, "check"
+                ])->name("check");
+
                 // 新規でLINEアカウントを登録する
                 Route::post("/create", [
                     AccountController::class, "create"

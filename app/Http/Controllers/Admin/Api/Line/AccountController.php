@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
-
+    private $errors = [];
 
 
 
@@ -25,13 +25,29 @@ class AccountController extends Controller
         try {
             $validated = $request->validated();
 
-            $line_account = LineAccount::create($validated);
+            $line_accounts = LineAccount::where([
+                "is_enabled" => Config("const.binary_type.on"),
+                "is_hidden" => Config("const.binary_type.off")
+            ])
+            ->get();
 
-            if ($line_account === null) {
-                throw new \Exception("Failed creating new line official account.");
-            }
+            $response = [
+                "status" => true,
+                "response" => $line_accounts,
+                "errors" => null,
+            ];
+            logger()->info($response);
+            return response()->json($response);
         } catch (\Exception $e) {
             logger()->error($e);
+            $response = [
+                "status" => false,
+                "response" => null,
+                // errorsは配列とする
+                "errors" => $this->errors,
+            ];
+            logger()->error($response);
+            return response()->json($response);
         }
     }
 
@@ -78,7 +94,9 @@ class AccountController extends Controller
 
             $line_account = LineAccount::create($validated);
 
+            // DBへのinsertが失敗した場合
             if ($line_account === null) {
+                $this->errors["system_error"][] = "Failed creating new line official account.";
                 throw new \Exception("Failed creating new line official account.");
             }
 
@@ -94,13 +112,59 @@ class AccountController extends Controller
         } catch (\Exception $e) {
             logger()->error($e);
             $response = [
-                "status" => true,
+                "status" => false,
                 "response" => null,
+                // errorsは配列とする
+                "errors" => $this->errors,
+            ];
+            logger()->error($response);
+            return response()->json($response);
+        }
+    }
+
+    /**
+     * 新規LINEアカウントを追加する前に行うバリデーションチェック
+     *
+     * @param AccountRequest $request
+     * @return void
+     */
+    public function check(AccountRequest $request)
+    {
+        // サンプルpostデータ
+        // {
+        //     "channel_id": "channel_id",
+        //     "channel_secret": "channel_secret",
+        //     "user_id": "user_id",
+        //     "messaging_channel_id": "messaging_channel_id",
+        //     "messaging_channel_secret": "messaging_channel_secret",
+        //     "messaging_user_id": "messaging_user_id",
+        //     "message_channel_access_token": "message_channel_access_token"
+        // }
+        try {
+            $validated = $request->validated();
+            logger()->info($validated);
+
+            // ---------------------------------------------------
+            // バリデーションチェックのみなのでpostデータをそのまま返却する
+            // response
+            // ---------------------------------------------------
+            $response = [
+                "status" => true,
+                "response" => $validated,
                 // errorsは配列とする
                 "errors" => null,
             ];
             logger()->info($response);
-
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logger()->error($e);
+            $response = [
+                "status" => false,
+                "response" => null,
+                // errorsは配列とする
+                "errors" => $this->errors,
+            ];
+            logger()->error($response);
             return response()->json($response);
         }
     }

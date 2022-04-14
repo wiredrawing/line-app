@@ -15,6 +15,7 @@ class CreateLineAccountsTable extends Migration
     {
         Schema::create('line_accounts', function (Blueprint $table) {
             $table->id();
+            $table->string("channel_name", 512);
             // LINEログイン
             $table->string("channel_id", 512);
             $table->string("channel_secret", 512);
@@ -35,6 +36,11 @@ class CreateLineAccountsTable extends Migration
 
             // unique 制約
             $table->unique("messaging_channel_access_token");
+            // channel名(本アプリケーション内でのみ使用)
+            $table->unique([
+                "channel_name",
+                "channel_id",
+            ]);
             // LINEログインAPI系
             $table->unique([
                 "channel_id",
