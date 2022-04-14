@@ -48,7 +48,12 @@ Route::group(["prefix" => "/", "as" => "admin."], function () {
                     AccountController::class, "create"
                 ])->name("create");
 
-                Route::get("/detail", [
+                // 指定したLINE公式アカウントを更新する
+                Route::post("/update/{line_account_id}", [
+                    AccountController::class, "update"
+                ])->name("update");
+
+                Route::get("/detail/{line_account_id}/{api_token}", [
                     AccountController::class, "detail"
                 ])->name("detail");
             });

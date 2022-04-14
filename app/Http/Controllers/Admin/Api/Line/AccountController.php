@@ -24,6 +24,7 @@ class AccountController extends Controller
     {
         try {
             $validated = $request->validated();
+            logger()->info($validated);
 
             $line_accounts = LineAccount::where([
                 "is_enabled" => Config("const.binary_type.on"),
@@ -51,6 +52,48 @@ class AccountController extends Controller
         }
     }
 
+    /**
+     * 指定したLINEアカウントの情報を取得する
+     *
+     * @param AccountRequest $request
+     * @param integer $line_account_id
+     * @return void
+     */
+    public function detail(AccountRequest $request, int $line_account_id, string $api_token)
+    {
+        try {
+            $validated = $request->validated();
+
+            logger()->info($validated);
+
+            $line_account = LineAccount::where([
+                "api_token" => $api_token,
+            ])->find($line_account_id);
+
+            if ($line_account === null) {
+                throw new \Exception("Could not find the account which you specified.");
+            }
+
+            $response = [
+                "status" => true,
+                "response" => $line_account,
+                // errorsは配列とする
+                "errors" => null,
+            ];
+            logger()->info($response);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logger()->error($e);
+            $response = [
+                "status" => false,
+                "response" => null,
+                // errorsは配列とする
+                "errors" => $this->errors,
+            ];
+            logger()->error($response);
+            return response()->json($response);
+        }
+    }
 
     /**
      * 新規LINEアカウントを追加するAPI
@@ -151,6 +194,64 @@ class AccountController extends Controller
             $response = [
                 "status" => true,
                 "response" => $validated,
+                // errorsは配列とする
+                "errors" => null,
+            ];
+            logger()->info($response);
+            return response()->json($response);
+        } catch (\Exception $e) {
+            logger()->error($e);
+            $response = [
+                "status" => false,
+                "response" => null,
+                // errorsは配列とする
+                "errors" => $this->errors,
+            ];
+            logger()->error($response);
+            return response()->json($response);
+        }
+    }
+
+    /**
+     * 指定したLINE公式アカウントの更新処理をする
+     *
+     * @param AccountRequest $request
+     * @param integer $line_account_id
+     * @return void
+     */
+    public function update(AccountRequest $request, int $line_account_id)
+    {
+        try {
+            $validated = $request->validated();
+
+            logger()->info($validated);
+
+            $line_account = LineAccount::findOrFail($line_account_id);
+
+            // アップデート処理を行う度に api_token を更新する
+            $api_token = RandomToken::MakeRandomToken(96);
+            $duplication_check = LineAccount::where([
+                "api_token" => $api_token,
+            ])
+            ->get()
+            ->first();
+
+            if ($duplication_check !== null) {
+                throw new \Exception("只今サーバーが混み合っています");
+            }
+
+            $validated["api_token"] = $api_token;
+
+            // update
+            $result = $line_account->update($validated);
+
+            if ($result !== true) {
+                throw new \Exception("Failed updating the account which you specified.");
+            }
+
+            $response = [
+                "status" => true,
+                "response" => $line_account,
                 // errorsは配列とする
                 "errors" => null,
             ];

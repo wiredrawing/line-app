@@ -105,9 +105,124 @@ class AccountRequest extends FormRequest
                         "string",
                     ],
                 ];
+            } elseif ($route_name === "admin.api.line.account.update") {
+                $rules = [
+                    "line_account_id" => [
+                        "required",
+                        "integer",
+                        Rule::exists("line_accounts", "id"),
+                    ],
+                    "api_token" => [
+                        "required",
+                        "string",
+                        function ($attribute, $value, $fail) {
+                            $line_account_id = $this->input("line_account_id");
+                            $line_account = LineAccount::where(["api_token" => $value])->find($line_account_id);
+
+                            if ($line_account === null) {
+                                $fail("Could not find the account which you specified.");
+                                return false;
+                            }
+                            return true;
+                        }
+                    ],
+                    "channel_id" => [
+                        "required",
+                        "string",
+                        function ($attribute, $value, $fail) {
+                            $line_account = LineAccount::where([
+                                "channel_id" => $value,
+                                "channel_secret" => $this->input("channel_secret")
+                            ])
+                            ->get()
+                            ->first();
+                            if ($line_account !== null) {
+                                $fail("The account which you posted has already registered on the application.");
+                            }
+                        }
+                    ],
+                    "channel_secret" => [
+                        "required",
+                        "string",
+                        function ($attribute, $value, $fail) {
+                            $line_account = LineAccount::where([
+                                "channel_id" => $this->input("channel_id"),
+                                "channel_secret" => $value,
+                            ])
+                            ->get()
+                            ->first();
+                            if ($line_account !== null) {
+                                $fail("The account which you posted has already registered on the application.");
+                            }
+                        }
+                    ],
+                    "user_id" => [
+                        "required",
+                        "string",
+                    ],
+                    "messaging_channel_id" => [
+                        "required",
+                        "string",
+                        function ($attribute, $value, $fail) {
+                            $line_account = LineAccount::where([
+                                "messaging_channel_id" => $value,
+                                "messaging_channel_secret" => $this->input("messaging_channel_secret"),
+                            ])
+                            ->get()
+                            ->first();
+                            if ($line_account !== null) {
+                                $fail("The account which you posted has already registered on the application.");
+                            }
+                        }
+                    ],
+                    "messaging_channel_secret" => [
+                        "required",
+                        "string",
+                        function ($attribute, $value, $fail) {
+                            $line_account = LineAccount::where([
+                                "messaging_channel_id" => $this->input("messaging_channel_id"),
+                                "messaging_channel_secret" => $value,
+                            ])
+                            ->get()
+                            ->first();
+                            if ($line_account !== null) {
+                                $fail("The account which you posted has already registered on the application.");
+                            }
+                        }
+                    ],
+                    "messaging_user_id" => [
+                        "required",
+                        "string",
+                    ],
+                    "message_channel_access_token" => [
+                        "required",
+                        "string",
+                    ],
+                ];
             }
         } elseif ($this->isMethod("get")) {
             if ($route_name === "admin.api.line.account.detail") {
+                $rules = [
+                    "line_account_id" => [
+                        "required",
+                        "integer",
+                        Rule::exists("line_accounts", "id"),
+                    ],
+                    "api_token" => [
+                        "required",
+                        "string",
+                        function ($attribute, $value, $fail) {
+                            $line_account_id = $this->route()->parameter("line_account_id");
+                            $line_account = LineAccount::where(["api_token" => $value])->find($line_account_id);
+
+                            if ($line_account === null) {
+                                $fail("Could not find the account which you specified.");
+                                return false;
+                            }
+                            return true;
+                        }
+                    ],
+                ];
             } elseif ($route_name === "admin.line.account.index") {
             } elseif ($route_name === "admin.line.account.detail") {
                 $rules = [
