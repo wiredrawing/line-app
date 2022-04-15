@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Line;
 
-use App\Models\LineAccount;
-use App\Models\LineMember;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Base\Line\LoginRequest;
-
-;
 use App\Libraries\RandomToken;
-use Illuminate\Http\Request;
+use App\Models\LineAccount;
+use App\Models\LineMember;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Str;
 
 class LoginController extends Controller
@@ -20,20 +23,19 @@ class LoginController extends Controller
      * 現在登録中のLINEアプリケーション一覧を表示
      *
      * @param LoginRequest $request
-     * @return void
+     * @return Application|Factory|View|Response
      */
     public function index(LoginRequest $request)
     {
         try {
-            $line_accounts = LineAccount::with([
-                // "line_callback_urls",
-            ])
-            ->where([
-                "is_enabled" =>  Config("const.binary_type.on"),
+            $line_accounts = LineAccount::where([
+                "is_enabled" => Config("const.binary_type.on"),
                 "is_hidden" => Config("const.binary_type.off"),
             ])
-            // ->whereHas("line_callback_urls")
-            ->get();
+                ->where(
+                    "application_key", "!=", null
+                )
+                ->get();
 
             return view("line.login.index", [
                 "line_accounts" => $line_accounts
@@ -47,16 +49,13 @@ class LoginController extends Controller
     }
 
 
-
-
-
     /**
      * 任意のLINEアプリケーションへのLINEログインのページ
      *
      * @param LoginRequest $request
-     * @param integer $line_account_id
+     * @param int $line_account_id
      * @param string $application_key
-     * @return void
+     * @return Application|RedirectResponse|Response|Redirector
      */
     public function detail(LoginRequest $request, int $line_account_id, string $application_key)
     {
@@ -66,7 +65,7 @@ class LoginController extends Controller
             $line_account = LineAccount::where([
                 "application_key" => $application_key,
             ])
-            ->find($validated["line_account_id"]);
+                ->find($validated["line_account_id"]);
 
             if ($line_account === null) {
                 throw new \Exception("指定したLINEアプリケーション用ログインページが見つかりませんでした");
@@ -80,8 +79,8 @@ class LoginController extends Controller
                 "api_token" => $api_token,
                 "line_account_id" => $line_account_id,
             ])
-            ->get()
-            ->first();
+                ->get()
+                ->first();
 
             if ($line_member !== null) {
                 throw new \Exception("只今サーバーが混み合っているようです.");
@@ -101,7 +100,7 @@ class LoginController extends Controller
                 "bot_prompt" => "aggressive",
             ];
 
-            return redirect(Config("const.line_login.authorize")."?".http_build_query($query_build));
+            return redirect(Config("const.line_login.authorize") . "?" . http_build_query($query_build));
         } catch (\Exception $e) {
             logger()->error($e);
             return response()->view("errors.index", [

@@ -23,20 +23,43 @@ class MemberRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
-        $method = strtoupper($this->getMethod());
+        logger()->info($this->validationData());
+
         $rules = [];
+        $route_name = Route::currentRouteName();
+
+        if ($this->isMethod("post")) {
+
+        } else if ($this->isMethod("get")) {
+
+            if ($route_name === "admin.api.line.member.detail") {
+                $rules = [
+                    "line_member_id" => [
+                        "required",
+                        "integer",
+                        Rule::exists("line_members", "id"),
+                    ]
+                ];
+            } else if ($route_name === "admin.api.line.member.list") {
+
+            }
+        }
+
+        return $rules;
     }
 
 
-    public function validationData()
+    /**
+     * @return array
+     */
+    public function validationData():array
     {
-        $validate_data = array_merge(
+        return array_merge(
             $this->all(),
             $this->input(),
             $this->route()->parameters()
         );
-        return $validate_data;
     }
 }
