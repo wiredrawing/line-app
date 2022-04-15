@@ -222,6 +222,17 @@ class AccountController extends Controller
     public function update(AccountRequest $request, int $line_account_id)
     {
         try {
+            // サンプルpostデータ
+            // {
+            //     "channel_id": "channel_id",
+            //     "channel_secret": "channel_secret",
+            //     "user_id": "user_id",
+            //     "messaging_channel_id": "messaging_channel_id",
+            //     "messaging_channel_secret": "messaging_channel_secret",
+            //     "messaging_user_id": "messaging_user_id",
+            //     "message_channel_access_token": "message_channel_access_token",
+            //     "api_token": "api_token"
+            // }
             $validated = $request->validated();
 
             logger()->info($validated);

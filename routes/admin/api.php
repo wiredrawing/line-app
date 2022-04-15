@@ -1,6 +1,8 @@
 <?php
 use App\Http\Controllers\Admin\Api\Line\ReserveController;
 use App\Http\Controllers\Admin\Api\Line\AccountController;
+use App\Http\Controllers\Admin\Api\Line\MemberController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::group(["prefix" => "/", "as" => "admin."], function () {
@@ -55,6 +57,22 @@ Route::group(["prefix" => "/", "as" => "admin."], function () {
 
                 Route::get("/detail/{line_account_id}/{api_token}", [
                     AccountController::class, "detail"
+                ])->name("detail");
+            });
+
+            // ------------------------------------------------------
+            // 現在登録中のLINEメンバー関連のAPI
+            // ------------------------------------------------------
+            Route::group(["prefix" => "member", "as" => "member."], function () {
+
+                // 登録済みメンバー一覧
+                Route::get("/list", [
+                    MemberController::class, "list#,"
+                ])->name("list");
+
+                // 登録済みメンバー一覧
+                Route::get("/detail/{line_member_id}", [
+                    MemberController::class, "detail",
                 ])->name("detail");
             });
         });
