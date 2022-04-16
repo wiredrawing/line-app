@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\LineReserve;
 use App\Models\LineMessage;
 use App\Http\Requests\Admin\Base\Line\ReserveRequest;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class ReserveController extends Controller
@@ -110,7 +113,7 @@ class ReserveController extends Controller
      * 登録処理自体はAPI側にまるごと委譲する
      *
      * @param ReserveRequest $request
-     * @return void
+     * @return Application|Factory|View|void
      */
     public function register(ReserveRequest $request)
     {
