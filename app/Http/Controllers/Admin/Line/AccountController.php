@@ -3,30 +3,42 @@
 namespace App\Http\Controllers\Admin\Line;
 
 use App\Http\Controllers\Controller;
-use App\Models\LineAccount;
 use App\Http\Requests\Admin\Base\Line\AccountRequest;
-use Illuminate\Http\Request;
+use App\Models\LineAccount;
+use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class AccountController extends Controller
 {
 
 
-
-
     /**
      * 現在登録中のLINEアカウント一覧を取得する
+     * Auth::user()でログインユーザー情報を取得するためにはルーティングにwebミドルウェアを設定する
      *
      * @param AccountRequest $request
-     * @return void
+     * @return Application|Factory|View|void
      */
     public function index(AccountRequest $request)
     {
         try {
+            if (Auth::check() !== true) {
+                throw new \Exception("ログインしていません");
+            }
+            // ログイン中の管理者情報を取得
+            $administrator = Auth::user();
+            print_r($administrator->toArray());
+            logger()->info($administrator);
+
             $line_accounts = LineAccount::all();
             return view("admin.line.account.index", [
                 "line_accounts" => $line_accounts,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
             logger()->error($e);
         }
     }
@@ -45,9 +57,9 @@ class AccountController extends Controller
 
             $line_account = LineAccount::create($validated);
             if ($line_account === null) {
-                throw new \Exception("新規LINEアカウントの登録に失敗しました");
+                throw new Exception("新規LINEアカウントの登録に失敗しました");
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e);
         }
     }
@@ -69,12 +81,12 @@ class AccountController extends Controller
             $line_account = LineAccount::with([
                 "line_members",
             ])
-            ->findOrFail($validated["line_account_id"]);
+                ->findOrFail($validated["line_account_id"]);
 
             return view("admin.line.account.detail", [
                 "line_account" => $line_account,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e);
         }
     }

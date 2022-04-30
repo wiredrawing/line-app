@@ -13,9 +13,15 @@ return [
     |
     */
 
+    //'defaults' => [
+    //    'guard' => 'web',
+    //    'passwords' => 'users',
+    //],
+
+    // 認証機能を任意のテーブルに変更する
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
+        'passwords' => 'administrators',
     ],
 
     /*
@@ -35,10 +41,18 @@ return [
     |
     */
 
+    //'guards' => [
+    //    'web' => [
+    //        'driver' => 'session',
+    //        'provider' => 'users',
+    //    ],
+    //],
+
+    // 任意のproviderに変更する
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'administrators',
         ],
     ],
 
@@ -60,9 +74,9 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'administrators' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\Administrator::class,
         ],
 
         // 'users' => [
@@ -87,8 +101,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'administrators' => [
+            'provider' => 'administrators',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
