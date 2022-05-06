@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Line\AccountController;
 use App\Http\Controllers\Admin\Line\MemberController;
 use App\Http\Controllers\Admin\Line\ReserveController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\PasswordController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(["prefix" => "/", "as" => "admin."], function () {
@@ -12,31 +13,64 @@ Route::group(["prefix" => "/", "as" => "admin."], function () {
 
     // --------------------------------------------------
     // 管理画面側ログインページ
+    // guest:webルーティングを使用することでこのルーティングに
+    // webプロバイダーでログインした場合はリダイレクトされる
     // --------------------------------------------------
-    Route::group(["middleware" => ["web"], "prefix" => "/login", "as" => "login."], function () {
+    Route::group(["prefix" => "/login", "as" => "login."], function () {
         Route::get("/", [
             LoginController::class, "index",
-        ])->name("index");
+        ])
+            ->middleware(["web", "guest:web"])
+            ->name("index");
 
         // --------------------------------------------------
         // 認証処理
         // --------------------------------------------------
         Route::post("/authenticate", [
             LoginController::class, "authenticate",
-        ])->name("authenticate");
+        ])
+            ->middleware(["web", "guest:web"])
+            ->name("authenticate");
 
         // --------------------------------------------------
         // 管理画面側ログアウトページ
         // --------------------------------------------------
         Route::get("/logout", [
             LoginController::class, "logout",
-        ])->name("logout");
+        ])
+            ->name("logout");
+    });
+
+    // --------------------------------------------------
+    // パスワードの再発行処理
+    // --------------------------------------------------
+    Route::group(["middleware" => ["web", "guest:web"], "prefix" => "/password", "as" => "password."], function () {
+
+        // パスワード再発行フォーム
+        Route::get("/renew", [
+            PasswordController::class, "renew"
+        ])->name("renew");
+
+        // パスワードリセットリンクの送信
+        Route::post("/postRenew", [
+            PasswordController::class, "postRenew"
+        ])->name("postRenew");
+
+        // リセットリンク送信完了画面
+        Route::get("/completed", [
+            PasswordController::class, "completed"
+        ])->name("completed");
+
+        // パスワードのリセット画面
+        Route::get("/reset/{token}", [
+            PasswordController::class, "reset"
+        ]);
     });
 
     // --------------------------------------------------
     // 以下は管理画面へログイン済みであることが前提とする
     // --------------------------------------------------
-    Route::middleware("auth")->group(function () {
+    Route::middleware(["auth"])->group(function () {
         // --------------------------------------------------
         // LINE関連の処理
         // --------------------------------------------------
