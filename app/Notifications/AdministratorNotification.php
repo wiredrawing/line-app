@@ -42,14 +42,10 @@ class AdministratorNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        var_dump("start", __FUNCTION__);
-        print_r($notifiable);
-        var_dump($this->token);
-        //exit();
-        var_dump("start", __FUNCTION__);
+        $password_reset_form_url = route("admin.password.reset", ["token" => $this->token]);
         return (new MailMessage)
                     ->line('------> customize -----> The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
+                    ->action('Notification Action', $password_reset_form_url)
                     ->line('Thank you for using our application!');
     }
 

@@ -59,6 +59,12 @@ class PasswordController extends Controller
         return redirect()->route("admin.password.completed");
     }
 
+    /**
+     * パスワードリセットURL送信完了画面
+     *
+     * @param Request $request
+     * @return Application|Factory|View
+     */
     public function completed(Request $request)
     {
         return view("admin.password.completed", [
@@ -66,9 +72,21 @@ class PasswordController extends Controller
         ]);
     }
 
-    public function reset(Request $request)
+    /**
+     * 新規パスワード入力画面
+     *
+     * @param Request $request
+     * @param string $token
+     * @param string $email
+     * @return Application|Factory|View|void
+     */
+    public function reset(Request $request, string $token, string $email)
     {
-
+        try {
+            $validated = $request->validated();
+        } catch (\Throwable $e) {
+            return view("admin.error.index");
+        }
     }
 
 }

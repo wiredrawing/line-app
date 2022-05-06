@@ -62,9 +62,9 @@ Route::group(["prefix" => "/", "as" => "admin."], function () {
         ])->name("completed");
 
         // パスワードのリセット画面
-        Route::get("/reset/{token}", [
+        Route::get("/reset/{token}/{email}", [
             PasswordController::class, "reset"
-        ]);
+        ])->name("reset");
     });
 
     // --------------------------------------------------

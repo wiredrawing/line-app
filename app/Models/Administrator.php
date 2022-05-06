@@ -38,8 +38,12 @@ class Administrator extends User
      */
     public function sendPasswordResetNotification($token)
     {
+        // 自身のオブジェクト自体を渡しても良いと思う
+        $administrator = $this;
+
         var_dump("start", __FUNCTION__);
         var_dump($token);
+        $this->notify(new AdministratorNotification($administrator));
         $this->notify(new AdministratorNotification($token));
         var_dump("start", __FUNCTION__);
     }
