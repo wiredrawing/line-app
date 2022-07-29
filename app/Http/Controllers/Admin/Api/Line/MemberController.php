@@ -25,7 +25,7 @@ class MemberController extends Controller
             $validated = $request->validated();
 
             $line_members = LineMember::where([
-                "is_hidden" => Config("const.binary_type.on"),
+                "is_displayed" => Config("const.binary_type.on"),
             ])->get();
 
             $response = [

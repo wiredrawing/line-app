@@ -67,7 +67,7 @@ Route::group(["prefix" => "/", "as" => "admin."], function () {
 
                 // 登録済みメンバー一覧
                 Route::get("/list", [
-                    MemberController::class, "list#,"
+                    MemberController::class, "list"
                 ])->name("list");
 
                 // 登録済みメンバー一覧

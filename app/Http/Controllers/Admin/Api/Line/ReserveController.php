@@ -21,26 +21,14 @@ class ReserveController extends Controller
 {
 
 
-    // POSTデータのフォーマット
-    // {
-    //     "api_token" : "something key",
-    //     "delivery_datetime": "2022-03-10 07:28",
-    //     "messages": [
-    //         {
-    //         "type": "text",
-    //         "text": "2"
-    //         },
-    //         .....
-    //     ]
-    // }
     /**
      * 指定したLINEアカウントでメッセージを予約する
      *
      * @param ReserveRequest $request
      * @param int $line_account_id
-     * @return Application|Factory|View|JsonResponse
+     * @return JsonResponse
      */
-    public function reserve(ReserveRequest $request, int $line_account_id)
+    public function reserve(ReserveRequest $request, int $line_account_id): JsonResponse
     {
         try {
             $validated = $request->validated();
@@ -90,8 +78,9 @@ class ReserveController extends Controller
             ]);
         } catch (Exception $e) {
             logger()->error($e);
-            return view("errors.index", [
-                "e" => $e,
+            return response()->json([
+                "status" => false,
+                "response" => $e,
             ]);
         }
     }
