@@ -39,7 +39,7 @@ class ReserveRequest extends FormRequest
         if ($this->isMethod("get")) {
 
             // API系へのリクエストの場合
-            if (Route::is("admin.api")) {
+            if (Route::is("admin.api.*")) {
                 if ($route_name === "admin.api.line.reserve.unsent") {
                     // 未送信のメッセージ一覧を取得する
                     $rules = [
@@ -179,7 +179,6 @@ class ReserveRequest extends FormRequest
             $this->input(),
             $this->route()->parameters(),
         );
-
         // リクエスト内容のロギング
         logger()->info($validation_data);
         return $validation_data;

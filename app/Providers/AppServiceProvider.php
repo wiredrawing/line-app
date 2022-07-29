@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Interfaces\LineLoginInterface;
+use App\Repositories\LineLoginRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // 独自リポジトリパターンの追加
+        $this->app->bind(LineLoginInterface::class, LineLoginRepository::class);
     }
 
     /**

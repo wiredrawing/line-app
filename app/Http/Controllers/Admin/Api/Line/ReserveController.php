@@ -89,8 +89,8 @@ class ReserveController extends Controller
      * 現時点で未配信のメッセージ一覧を取得する
      *
      * @param ReserveRequest $request
-     * @param integer $line_account_id
-     * @return void
+     * @param int $line_account_id
+     * @return Application|Factory|View|JsonResponse
      */
     public function unsentMessages(ReserveRequest $request, int $line_account_id)
     {
