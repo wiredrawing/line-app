@@ -32,6 +32,11 @@ class AccountRequest extends FormRequest
         if ($this->isMethod("post")) {
             if ($route_name === "admin.api.line.account.create" || $route_name === "admin.api.line.account.check") {
                 $rules = [
+                    "channel_name" => [
+                        "required",
+                        "string",
+                        "between:1,512",
+                    ],
                     "channel_id" => [
                         "required",
                         "string",
@@ -100,7 +105,7 @@ class AccountRequest extends FormRequest
                         "required",
                         "string",
                     ],
-                    "message_channel_access_token" => [
+                    "messaging_channel_access_token" => [
                         "required",
                         "string",
                     ],

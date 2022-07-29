@@ -12,6 +12,7 @@ class LineAccount extends Model
 
 
     public $fillable = [
+        "channel_name",
         "channel_id",
         "channel_secret",
         "user_id",

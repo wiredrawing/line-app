@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Api\Line\AccountRequest;
 use App\Models\LineAccount;
 use App\Libraries\RandomToken;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -99,9 +100,9 @@ class AccountController extends Controller
      * 新規LINEアカウントを追加するAPI
      *
      * @param AccountRequest $request
-     * @return void
+     * @return JsonResponse
      */
-    public function create(AccountRequest $request)
+    public function create(AccountRequest $request): JsonResponse
     {
         // サンプルpostデータ
         // {
@@ -154,6 +155,7 @@ class AccountController extends Controller
             return response()->json($response);
         } catch (\Exception $e) {
             logger()->error($e);
+            var_dump($e->getMessage());
             $response = [
                 "status" => false,
                 "response" => null,
