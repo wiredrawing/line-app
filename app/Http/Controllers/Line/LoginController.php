@@ -72,7 +72,7 @@ class LoginController extends Controller
             }
 
             // ユーザーの識別用のランダムトークン
-            $api_token = RandomToken::MakeRandomToken(128);
+            $api_token = RandomToken::MakeRandomToken(64);
 
             // 同一のLINE channel_idでapi_tokenが重複しないかどうかを検証
             $line_member = LineMember::where([
@@ -99,7 +99,8 @@ class LoginController extends Controller
                 "state" => hash("sha256", Str::uuid()),
                 "bot_prompt" => "aggressive",
             ];
-
+            // 以下URL(LINE側ドメイン)にリダイレクトさせLINE側でログインさせる
+            // ユーザーに認証と認可を要求する
             return redirect(Config("const.line_login.authorize") . "?" . http_build_query($query_build));
         } catch (\Exception $e) {
             logger()->error($e);

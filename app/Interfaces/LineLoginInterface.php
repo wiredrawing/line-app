@@ -8,5 +8,6 @@ interface  LineLoginInterface {
 
 
     // Authorization using callback url.
-    public function authenticate();
+    function authenticate();
+
 }

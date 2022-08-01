@@ -7,7 +7,6 @@ use App\Http\Requests\Admin\Api\Line\AccountRequest;
 use App\Models\LineAccount;
 use App\Libraries\RandomToken;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
@@ -19,9 +18,9 @@ class AccountController extends Controller
      * 登録済みLINEアカウント一覧を返却
      *
      * @param AccountRequest $request
-     * @return void
+     * @return JsonResponse
      */
-    public function list(AccountRequest $request)
+    public function list(AccountRequest $request): JsonResponse
     {
         try {
             $validated = $request->validated();
@@ -57,10 +56,11 @@ class AccountController extends Controller
      * 指定したLINEアカウントの情報を取得する
      *
      * @param AccountRequest $request
-     * @param integer $line_account_id
-     * @return void
+     * @param int $line_account_id
+     * @param string $api_token
+     * @return JsonResponse
      */
-    public function detail(AccountRequest $request, int $line_account_id, string $api_token)
+    public function detail(AccountRequest $request, int $line_account_id, string $api_token): JsonResponse
     {
         try {
             $validated = $request->validated();
@@ -171,9 +171,9 @@ class AccountController extends Controller
      * 新規LINEアカウントを追加する前に行うバリデーションチェック
      *
      * @param AccountRequest $request
-     * @return void
+     * @return JsonResponse
      */
-    public function check(AccountRequest $request)
+    public function check(AccountRequest $request): JsonResponse
     {
         // サンプルpostデータ
         // {
@@ -218,10 +218,10 @@ class AccountController extends Controller
      * 指定したLINE公式アカウントの更新処理をする
      *
      * @param AccountRequest $request
-     * @param integer $line_account_id
-     * @return void
+     * @param int $line_account_id
+     * @return JsonResponse
      */
-    public function update(AccountRequest $request, int $line_account_id)
+    public function update(AccountRequest $request, int $line_account_id): JsonResponse
     {
         try {
             // サンプルpostデータ

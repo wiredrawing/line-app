@@ -122,8 +122,8 @@ class ReserveController extends Controller
      * 現時点で配信済みのメッセージ一覧を取得する
      *
      * @param ReserveRequest $request
-     * @param integer $line_account_id
-     * @return void
+     * @param int $line_account_id
+     * @return Application|Factory|View|JsonResponse
      */
     public function sentMessages(ReserveRequest $request, int $line_account_id)
     {
@@ -313,10 +313,10 @@ class ReserveController extends Controller
      * (※フロントエンドの編集用データとして返却する)
      *
      * @param ReserveRequest $request
-     * @param integer $line_reserve_id
-     * @return void
+     * @param int $line_reserve_id
+     * @return JsonResponse
      */
-    public function fetchReserve(ReserveRequest $request, int $line_reserve_id = 0)
+    public function fetchReserve(ReserveRequest $request, int $line_reserve_id = 0): JsonResponse
     {
         try {
             $validated = $request->validated();

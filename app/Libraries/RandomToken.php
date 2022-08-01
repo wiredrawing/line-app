@@ -20,8 +20,9 @@ class RandomToken
             range("a", "z"),
             range("A", "Z"),
         );
-        $characters[] = "_";
-        $characters[] = "-";
+        $characters[] = "@";
+        $characters[] = "$";
+        $characters[] = "!";
 
         $random_token = "";
         for ($i = 0; $i < $length; $i++) {
