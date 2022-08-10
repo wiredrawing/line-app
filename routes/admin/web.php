@@ -65,6 +65,11 @@ Route::group(["prefix" => "/", "as" => "admin."], function () {
         Route::get("/reset/{token}/{email}", [
             PasswordController::class, "reset"
         ])->name("reset");
+
+        // パスワードアップデート処理を実行
+        Route::post("/update", [
+            PasswordController::class, "postUpdate"
+        ])->name("postUpdate");
     });
 
     // --------------------------------------------------

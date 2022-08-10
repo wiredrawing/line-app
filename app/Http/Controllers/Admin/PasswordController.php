@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Base\PasswordRequest;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -18,10 +19,10 @@ class PasswordController extends Controller
     /**
      * パスワード再発行画面
      *
-     * @param Request $request
+     * @param PasswordRequest $request
      * @return Application|Factory|View
      */
-    public function renew(Request $request)
+    public function renew(PasswordRequest $request)
     {
         return view("admin.password.renew", [
 
@@ -32,40 +33,30 @@ class PasswordController extends Controller
     /**
      * パスワードリセット用URlの送信処理
      *
-     * @param Request $request
+     * @param PasswordRequest $request
      * @return RedirectResponse
      */
-    public function postRenew(Request $request)
+    public function postRenew(PasswordRequest $request)
     {
-        var_dump("start", __FUNCTION__);
         $request->validate(['email' => 'required|email']);
-        var_dump($request->input("email"));
-        //exit();
-        var_dump(Config("mail"));
-        var_dump($request->only("email"));
+
         $status = Password::sendResetLink(
             $request->only('email')
         );
-        var_dump($status);
-
 
         $status === Password::RESET_LINK_SENT
             ? back()->with(['status' => __($status)])
             : back()->withErrors(['email' => __($status)]);
-
-        var_dump($status);
-        var_dump("end", __FUNCTION__);
-        exit();
         return redirect()->route("admin.password.completed");
     }
 
     /**
      * パスワードリセットURL送信完了画面
      *
-     * @param Request $request
+     * @param PasswordRequest $request
      * @return Application|Factory|View
      */
-    public function completed(Request $request)
+    public function completed(PasswordRequest $request)
     {
         return view("admin.password.completed", [
 
@@ -75,16 +66,22 @@ class PasswordController extends Controller
     /**
      * 新規パスワード入力画面
      *
-     * @param Request $request
+     * @param PasswordRequest $request
      * @param string $token
      * @param string $email
      * @return Application|Factory|View|void
      */
-    public function reset(Request $request, string $token, string $email)
+    public function reset(PasswordRequest $request, string $token, string $email)
     {
         try {
+            print("パスワード再発行画面");
             $validated = $request->validated();
+
+            // パスワード再発行URLのパラメータをログ
+            logger()->info($validated);
+
         } catch (\Throwable $e) {
+            logger()->error($e);
             return view("admin.error.index");
         }
     }

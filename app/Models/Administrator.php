@@ -43,8 +43,7 @@ class Administrator extends User
 
         var_dump("start", __FUNCTION__);
         var_dump($token);
-        $this->notify(new AdministratorNotification($administrator));
-        $this->notify(new AdministratorNotification($token));
+        $this->notify(new AdministratorNotification($administrator, $token));
         var_dump("start", __FUNCTION__);
     }
 }
