@@ -16,11 +16,10 @@ class LineLoginRepository implements LineLoginInterface
 
     /**
      * Lineログイン後に認証情報を取得しDBへ保存する.
-     *
      * @param array $validated_data
-     * @return bool
+     * @return LineMember|null
      */
-    public function authenticate(array $validated_data = []): bool
+    public function authenticate(array $validated_data = []): ?LineMember
     {
         try {
             // line_account_idから実行中のLINEアプリケーションを取得
@@ -78,15 +77,15 @@ class LineLoginRepository implements LineLoginInterface
             } else {
                 // nullでない場合はアップデートを行う
                 // 二度目以降のログイン
-                $line_member = $line_member->update($line_info);
-                if ($line_member !== true) {
+                $result = $line_member->update($line_info);
+                if ($result !== true) {
                     throw new Exception("LINEユーザー情報のアップデートに失敗しました");
                 }
             }
-            return true;
+            return $line_member;
         } catch (Throwable $e) {
             logger()->error($e);
-            return false;
+            return null;
         }
     }
 
@@ -97,7 +96,7 @@ class LineLoginRepository implements LineLoginInterface
      * @param array $validated_data
      * @return array|null
      */
-    private function fetchAccessToken(array $validated_data = []): ?array
+    public function fetchAccessToken(array $validated_data = []): ?array
     {
         try {
             if ($this->line_account === null) {
