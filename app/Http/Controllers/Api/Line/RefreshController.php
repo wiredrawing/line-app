@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Line;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Base\Line\RefreshRequest;
 use App\Models\LineMember;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 
 class RefreshController extends Controller
@@ -14,10 +15,9 @@ class RefreshController extends Controller
      * 指定したLINEユーザーのアクセストークンの更新を行う
      *
      * @param RefreshRequest $request
-     * @param string $api_token
-     * @return void
+     * @return JsonResponse
      */
-    public function index(RefreshRequest $request)
+    public function index(RefreshRequest $request): JsonResponse
     {
         try {
             // --------------------------------------
