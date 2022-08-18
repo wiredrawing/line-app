@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class LineMember extends Model
 {
@@ -27,8 +29,20 @@ class LineMember extends Model
         "api_token",
     ];
 
-    public function line_account()
+    /**
+     * @return BelongsTo
+     */
+    public function line_account(): BelongsTo
     {
         return $this->belongsTo(LineAccount::class, "line_account_id", "id");
     }
+
+    /**
+     * @return HasOne
+     */
+    public function end_user(): HasOne
+    {
+        return $this->hasOne(LineMember::class, "line_member_id", "id");
+    }
+
 }

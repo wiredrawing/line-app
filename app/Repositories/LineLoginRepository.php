@@ -4,8 +4,10 @@ namespace App\Repositories;
 
 
 use App\Interfaces\LineLoginInterface;
+use App\Models\Player;
 use App\Models\LineAccount;
 use App\Models\LineMember;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Exception;
 use Throwable;
@@ -16,6 +18,7 @@ class LineLoginRepository implements LineLoginInterface
 
     /**
      * Lineログイン後に認証情報を取得しDBへ保存する.
+     *
      * @param array $validated_data
      * @return LineMember|null
      */
@@ -59,30 +62,63 @@ class LineLoginRepository implements LineLoginInterface
             $line_info["line_account_id"] = $validated_data["line_account_id"];
             $line_info["api_token"] = $validated_data["api_token"];
 
-            $line_member = LineMember::where([
-                "sub" => $line_id,
-                "line_account_id" => $validated_data["line_account_id"],
-            ])
-                ->get()
-                ->first();
+            try {
+                DB::beginTransaction();
+                $line_member = LineMember::where([
+                    "sub" => $line_id,
+                    "line_account_id" => $validated_data["line_account_id"],
+                ])
+                    ->get()
+                    ->first();
 
-            // Today, I have just taken an interview of major system company online.
-            if ($line_member === null) {
-                // 当該のLINEアプリケーションへのログインが始めての場合
-                // line_membersテーブルへ新規insert
-                $line_member = LineMember::create($line_info);
+                // Today, I have just taken an interview of major system company online.
                 if ($line_member === null) {
-                    throw new Exception("Failed registering new line member info.");
+                    // 当該のLINEアプリケーションへのログインが始めての場合
+                    // line_membersテーブルへ新規insert
+                    $line_member = LineMember::create($line_info);
+                    if ($line_member === null) {
+                        throw new Exception("Failed registering new line member info.");
+                    }
+                    $new_end_user = [
+                        "line_member_id" => $line_member->id,
+                        "given_name" => $line_member->name,
+                        "email" => $line_member->email,
+                    ];
+                    // 新規end_userレコードを登録
+                    $player = Player::create($new_end_user);
+                    if ($player === null) {
+                        throw new Exception("Failed registering new end user info.");
+                    }
+                } else {
+                    // nullでない場合はアップデートを行う
+                    // 二度目以降のログイン
+                    $result = $line_member->update($line_info);
+                    if ($result !== true) {
+                        throw new Exception("LINEユーザー情報のアップデートに失敗しました");
+                    }
+                    $player = Player::where([
+                        "line_member_id" => $line_member->id,
+                    ])
+                        ->get()
+                        ->first();
+                    if ($player === null) {
+                        throw new Exception("Could not find end user info which you specified.");
+                    }
+                    $result = $player->update([
+                        "given_name" => $line_member->name,
+                        "email" => $line_member->email,
+                    ]);
+                    if ($result !== true) {
+                        throw new Exception("Failed updating existing line member info.");
+                    }
                 }
-            } else {
-                // nullでない場合はアップデートを行う
-                // 二度目以降のログイン
-                $result = $line_member->update($line_info);
-                if ($result !== true) {
-                    throw new Exception("LINEユーザー情報のアップデートに失敗しました");
-                }
+                DB::commit();
+                return $line_member;
+            } catch (Throwable $e) {
+                DB::rollback();
+                logger()->error($e);
+                throw new Exception("Failed the query to database.");
             }
-            return $line_member;
         } catch (Throwable $e) {
             logger()->error($e);
             return null;

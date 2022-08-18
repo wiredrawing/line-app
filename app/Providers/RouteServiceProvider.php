@@ -62,6 +62,14 @@ class RouteServiceProvider extends ServiceProvider
                 ->middleware("check.login.admin")
                 ->namespace($this->namespace)
                 ->group(base_path("routes/admin/api.php"));
+
+            // フロントエンド側APIのルーティング
+            Route::group(["prefix" => "front", "as" => "front."], function () {
+                Route::group(["prefix" => "api", "as" => "api."], function () {
+                    Route::namespace($this->namespace)
+                        ->group(base_path("routes/front/api.php"));
+                });
+            });
         });
     }
 

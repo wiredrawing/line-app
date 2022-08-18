@@ -2,7 +2,6 @@
 use App\Http\Controllers\Admin\Api\Line\ReserveController;
 use App\Http\Controllers\Admin\Api\Line\AccountController;
 use App\Http\Controllers\Admin\Api\Line\MemberController;
-
 use Illuminate\Support\Facades\Route;
 
 Route::group(["prefix" => "/", "as" => "admin."], function () {
