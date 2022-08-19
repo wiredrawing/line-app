@@ -9,49 +9,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AccountRequest extends BaseAccountRequest
 {
-    // /**
-    //  * Determine if the user is authorized to make this request.
-    //  *
-    //  * @return bool
-    //  */
-    // public function authorize()
-    // {
-    //     return true;
-    // }
-
-    // /**
-    //  * Get the validation rules that apply to the request.
-    //  *
-    //  * @return array
-    //  */
-    // public function rules()
-    // {
-    //     $rules = [];
-    //     $route_name = Route::currentRouteName();
-
-    //     if ($this->isMethod("post")) {
-    //     } elseif ($this->isMethod("get")) {
-    //     }
-    //     return $rules;
-    // }
-
-
-
-
-    // /**
-    //  * バリデーション対象のデータ
-    //  *
-    //  * @return array
-    //  */
-    // public function validationData():array
-    // {
-    //     $validation_data = array_merge(
-    //         $this->all(),
-    //         $this->input(),
-    //         $this->route()->parameters(),
-    //     );
-    //     return $validation_data;
-    // }
 
     /**
      * API実行時エラーをapplication/jsonで返却する

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Base\Line;
+namespace App\Http\Requests\Admin\Base\Line;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Route;
@@ -30,13 +30,13 @@ class RefreshRequest extends FormRequest
         $rules = [];
 
         if ($method === "POST") {
-            if ($current_route === "api.line.refresh.index") {
+            if ($current_route === "admin.api.line.refresh.index") {
                 $rules = [
                     "api_token" => [
                         "required",
                         "string",
                         Rule::exists("line_members", "api_token"),
-                    ]
+                    ],
                 ];
             }
         }
@@ -46,15 +46,16 @@ class RefreshRequest extends FormRequest
     }
 
 
-
-    public function validationData()
+    /**
+     * バリデーション対象のデータを配列にまとめる
+     * @return array
+     */
+    public function validationData(): array
     {
-        $validation_data = array_merge(
+        return array_merge(
             $this->all(),
             $this->input(),
             $this->route()->parameters()
         );
-
-        return $validation_data;
     }
 }

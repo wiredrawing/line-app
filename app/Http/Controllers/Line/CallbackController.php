@@ -5,15 +5,12 @@ namespace App\Http\Controllers\Line;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Base\Line\CallbackRequest;
 use App\Interfaces\LineLoginInterface;
-use App\Models\LineAccount;
 use App\Models\LineMember;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class CallbackController extends Controller
 {
@@ -34,16 +31,22 @@ class CallbackController extends Controller
             $validated_data = $request->validated();
 
             // リポジトリパターンで対応
-            $isSuccess = $lineLoginRepository->authenticate($validated_data);
-
-            if ($isSuccess !== true) {
+            $line_member = $lineLoginRepository->authenticate($validated_data);
+            if ($line_member === null) {
                 throw new \Exception("Callback処理に失敗しました");
             }
 
+            $line_member_id = $line_member->id;
+            $line_member = LineMember::with([
+                "player",
+            ])->findOrFail($line_member_id);
+
+            print_r($line_member->toArray());
             // LINEログイン完了画面へ遷移
             return redirect()->route("line.callback.completed", [
                 "line_account_id" => $validated_data["line_account_id"],
                 "api_token" => $validated_data["api_token"],
+                "api_token" => $line_member->player->api_token,
             ]);
         } catch (Exception $e) {
             logger()->error($e);

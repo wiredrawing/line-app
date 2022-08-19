@@ -11,53 +11,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ReserveRequest extends BaseReserveRequest
 {
-//    /**
-//     * Determine if the user is authorized to make this request.
-//     *
-//     * @return bool
-//     */
-//    public function authorize()
-//    {
-//        return true;
-//    }
-
-//    /**
-//     * Get the validation rules that apply to the request.
-//     *
-//     * @return array
-//     */
-//    public function rules()
-//    {
-//        $rules = [];
-//        $current_route = Route::currentRouteName();
-//
-//        if ($this->isMethod("post")) {
-//
-//        } elseif ($this->isMethod("get")) {
-//
-//        }
-//
-//
-//        return $rules;
-//    }
-
-
-//    /**
-//     * バリデーション対象のデータをここで構築する
-//     *
-//     * @return array
-//     */
-//    public function validationData():array
-//    {
-//        $validation_data = array_merge(
-//            $this->all(),
-//            $this->input(),
-//            $this->route()->parameters(),
-//        );
-//        logger()->info($validation_data);
-//        return $validation_data;
-//    }
-
 
     /**
      * API実行時エラーをapplication/jsonで返却する

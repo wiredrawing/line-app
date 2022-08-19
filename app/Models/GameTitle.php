@@ -15,6 +15,8 @@ class GameTitle extends Model
         "platform_id",
         "description",
         "genre_id",
+        "created_by",
+        "updated_by",
     ];
 
 }

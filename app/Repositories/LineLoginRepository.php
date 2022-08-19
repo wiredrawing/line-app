@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 
 use App\Interfaces\LineLoginInterface;
+use App\Libraries\RandomToken;
 use App\Models\Player;
 use App\Models\LineAccount;
 use App\Models\LineMember;
@@ -16,6 +17,9 @@ class LineLoginRepository implements LineLoginInterface
 {
     private $line_account = null;
 
+    private $api_token = null;
+
+
     /**
      * Lineログイン後に認証情報を取得しDBへ保存する.
      *
@@ -25,9 +29,15 @@ class LineLoginRepository implements LineLoginInterface
     public function authenticate(array $validated_data = []): ?LineMember
     {
         try {
+            // APIコール用のトークンを生成する(※LINEログインの度に)
+            $token = RandomToken::MakeRandomToken(128);
+            if (strlen($token) !== 128) {
+                throw new \Exception("api_tokenの作成に失敗しました");
+            }
+            $this->api_token = $token;
+
             // line_account_idから実行中のLINEアプリケーションを取得
-            $this->line_account = LineAccount::with([])
-                ->findOrFail($validated_data["line_account_id"]);
+            $this->line_account = LineAccount::findOrFail($validated_data["line_account_id"]);
 
             // 認可コードおよびclient_id,client_secretを使ってaccess_tokenを要求する
             $line_info = $this->fetchAccessToken($validated_data);
@@ -71,55 +81,23 @@ class LineLoginRepository implements LineLoginInterface
                     ->get()
                     ->first();
 
-                // Today, I have just taken an interview of major system company online.
                 if ($line_member === null) {
-                    // 当該のLINEアプリケーションへのログインが始めての場合
-                    // line_membersテーブルへ新規insert
-                    $line_member = LineMember::create($line_info);
-                    if ($line_member === null) {
-                        throw new Exception("Failed registering new line member info.");
-                    }
-                    $new_end_user = [
-                        "line_member_id" => $line_member->id,
-                        "given_name" => $line_member->name,
-                        "email" => $line_member->email,
-                    ];
-                    // 新規end_userレコードを登録
-                    $player = Player::create($new_end_user);
-                    if ($player === null) {
-                        throw new Exception("Failed registering new end user info.");
-                    }
+                    // 新規player情報を追加
+                    $line_member = $this->createLineMember($line_info);
                 } else {
-                    // nullでない場合はアップデートを行う
-                    // 二度目以降のログイン
-                    $result = $line_member->update($line_info);
-                    if ($result !== true) {
-                        throw new Exception("LINEユーザー情報のアップデートに失敗しました");
-                    }
-                    $player = Player::where([
-                        "line_member_id" => $line_member->id,
-                    ])
-                        ->get()
-                        ->first();
-                    if ($player === null) {
-                        throw new Exception("Could not find end user info which you specified.");
-                    }
-                    $result = $player->update([
-                        "given_name" => $line_member->name,
-                        "email" => $line_member->email,
-                    ]);
-                    if ($result !== true) {
-                        throw new Exception("Failed updating existing line member info.");
-                    }
+                    // 二度目のログインの場合情報のアップデートを実行
+                    $line_member = $this->updateLineMember($line_info, $line_member);
                 }
                 DB::commit();
                 return $line_member;
             } catch (Throwable $e) {
                 DB::rollback();
+                var_dump($e->getMessage());
                 logger()->error($e);
                 throw new Exception("Failed the query to database.");
             }
         } catch (Throwable $e) {
+            var_dump($e->getMessage());
             logger()->error($e);
             return null;
         }
@@ -177,5 +155,67 @@ class LineLoginRepository implements LineLoginInterface
             logger()->error($e);
             return null;
         }
+    }
+
+
+    /**
+     * @param array $new_line_info
+     * @return LineMember
+     * @throws Exception
+     */
+    private function createLineMember(array $new_line_info): \App\Models\LineMember
+    {
+        // 当該のLINEアプリケーションへのログインが始めての場合
+        // line_membersテーブルへ新規insert
+        $line_member = LineMember::create($new_line_info);
+        if ($line_member === null) {
+            throw new Exception("Failed registering new line member info.");
+        }
+        $new_end_user = [
+            "line_member_id" => $line_member->id,
+            "nickname" => $line_member->name,
+            "email" => $line_member->email,
+            "api_token" => $this->api_token,
+        ];
+        // 新規end_userレコードを登録
+        $player = Player::create($new_end_user);
+        if ($player === null) {
+            throw new Exception("Failed registering new end user info.");
+        }
+        return LineMember::findOrFail($line_member->id);
+    }
+
+    /**
+     * 指定した line member情報を更新する
+     * @param array $update_line_info
+     * @param LineMember $line_member
+     * @return LineMember
+     * @throws Exception
+     */
+    private function updateLineMember(array $update_line_info, LineMember $line_member): LineMember
+    {
+        // nullでない場合はアップデートを行う
+        // 二度目以降のログイン
+        $result = $line_member->update($update_line_info);
+        if ($result !== true) {
+            throw new Exception("LINEユーザー情報のアップデートに失敗しました");
+        }
+        $player = Player::where([
+            "line_member_id" => $line_member->id,
+        ])
+            ->get()
+            ->first();
+        if ($player === null) {
+            throw new Exception("Could not find end user info which you specified.");
+        }
+        $result = $player->update([
+            "email" => $line_member->email,
+            // api_tokenはログインの度に更新する
+            "api_token" => $this->api_token,
+        ]);
+        if ($result !== true) {
+            throw new Exception("Failed updating existing line member info.");
+        }
+        return LineMember::findOrFail($line_member->id);
     }
 }

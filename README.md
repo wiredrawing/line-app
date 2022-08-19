@@ -58,6 +58,73 @@
 ```
 
 
+## LINEログインしたline memberのアクセストークンをリフレッシュする
+**http://localhost:8000/admin/api/line/refresh/index**
+
+```post.json
+{
+    "api_token": "IKjigMwGY_-wINxr4sslhZohI49fBzxJQYQqVe1f_YzOKL6KZ161qAGDwzGsrW_6"
+}
+```
+
+```response.json
+{
+    "status": true,
+    "response": {
+        "id": 1,
+        "access_token": "...GhK0ECXfcWnhi3sJvdMSOgJ_5ycwnKDN8U4adx2aNhhDe__BG8Je04eqGaPB6nu6O...",
+        "expires_in": 2592000,
+        "id_token": "...aW5lLm1lIiwic3ViiM2MiwiaWF0IjoxNjYwODkzNzYyLCJub25jZSI6IjcwMDg5YTQyODRkNWNiNzhhZWIxZGY5ZWIxOTViMmM2YzExYjI0YmJhYmIwNDY4ZDJkM2I1MmE5YjhhNjNmNjciLCJhbXIiOlsibGluZXNzbyJdLCJuYW1lIjoiU2VuYmlraSBBa2lmdW1pIiwicGljdHVyZSI6Imh0dHBzOi8vcHJvZmlsZS5saW5lLXNjZG4ubmV0LzBoeGx6M0xibEtKME5IU2pFV0tUWllGSHNQS1M0d1pDRUxQeVZ0SkRGTEtYdGpjMmtTZW5nNGNHSlBLWEZpZTJZZGVTVTdkallkZTNwdSIsImVtYWlsIjoiYWtpZnVtaS5zZW5iaWtpLjEyMDlAZ...",
+        "refresh_token": "...",
+        "token_type": "Bearer",
+        "email": "...",
+        "picture": "https://profile.line-scdn.net/0hxlz3LblKJ0NHSjEWKTZYFHsPKS4wZCELPyVtJDFLKXtjc2kSeng4cGJPKXFie2YdeSU7djYde3pu",
+        "name": "...",
+        "is_displayed": 1,
+        "sub": "...",
+        "aud": "...",
+        "line_account_id": 1,
+        "api_token": "本アプリケーション独自のトークン",
+        "created_at": "2022-08-19T07:22:40.000000Z",
+        "updated_at": "2022-08-19T08:19:15.000000Z",
+        "line_account": {
+            "id": 1,
+            "channel_name": "ゲームマッチングアプリ",
+            "channel_id": "123456789",
+            "channel_secret": "...",
+            "user_id": "...",
+            "messaging_channel_id": "...",
+            "messaging_channel_secret": "...",
+            "messaging_user_id": "...",
+            "messaging_channel_access_token": "...",
+            "webhook_url": "",
+            "api_token": "",
+            "application_key": "game_matching",
+            "is_enabled": 1,
+            "is_hidden": 0,
+            "created_at": "2022-08-19T00:55:45.000000Z",
+            "updated_at": "2022-08-19T00:55:48.000000Z"
+        },
+        "player": {
+            "id": 1,
+            "line_member_id": 1,
+            "family_name": null,
+            "middle_name": null,
+            "given_name": null,
+            "nickname": "LINEアカウントと連携する",
+            "email": "LINEアカウントと連携する",
+            "gender_id": null,
+            "is_displayed": 1,
+            "is_deleted": 0,
+            "is_published": 0,
+            "player_token": "本アプリケーション独自",
+            "created_at": "2022-08-19T07:22:40.000000Z",
+            "updated_at": "2022-08-19T07:22:40.000000Z"
+        }
+    }
+}
+```
+
 
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>

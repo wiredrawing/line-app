@@ -23,6 +23,8 @@ class CreateGemeTitlesTable extends Migration
             $table->integer("genre_id");
             $table->tinyInteger("is_displayed")->default(1);
             $table->tinyInteger("is_deleted")->default(0);
+            $table->bigInteger("created_by")->nullable();
+            $table->bigInteger("updated_by")->nullable();
             $table->timestamps();
         });
     }

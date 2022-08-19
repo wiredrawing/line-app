@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\Admin\Api\Line\RefreshController;
 use App\Http\Controllers\Admin\Api\Line\ReserveController;
 use App\Http\Controllers\Admin\Api\Line\AccountController;
 use App\Http\Controllers\Admin\Api\Line\MemberController;
@@ -6,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(["prefix" => "/", "as" => "admin."], function () {
     Route::group(["prefix" => "/", "as" => "api."], function () {
+
         Route::group(["prefix" => "line", "as" => "line."], function () {
             // ------------------------------------------------------
             // フロントエンド用のLINEメッセージの操作用API
@@ -27,6 +30,13 @@ Route::group(["prefix" => "/", "as" => "admin."], function () {
                 Route::post("/update/{line_reserve_id}", [
                     ReserveController::class, "update",
                 ])->name("update");
+            });
+
+            // 登録済みのLineMemberのaccess_tokenをリフレッシュする
+            Route::group(["prefix" => "refresh", "as" => "refresh."], function () {
+                Route::post("/index", [
+                    RefreshController::class, "index",
+                ])->name("index");
             });
 
             // ------------------------------------------------------

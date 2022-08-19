@@ -40,9 +40,9 @@ class LineMember extends Model
     /**
      * @return HasOne
      */
-    public function end_user(): HasOne
+    public function player(): HasOne
     {
-        return $this->hasOne(LineMember::class, "line_member_id", "id");
+        return $this->hasOne(Player::class, "line_member_id", "id");
     }
 
 }

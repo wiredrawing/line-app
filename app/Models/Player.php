@@ -16,10 +16,13 @@ class Player extends Model
         "family_name",
         "middle_name",
         "given_name",
+        "nickname",
         "email",
         "is_displayed",
         "is_deleted",
         "gender_id",
+        "is_published",
+        "api_token",
     ];
 
 

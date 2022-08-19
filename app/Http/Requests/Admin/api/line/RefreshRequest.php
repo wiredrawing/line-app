@@ -2,14 +2,14 @@
 
 namespace App\Http\Requests\Admin\Api\Line;
 
-use App\Http\Requests\Admin\Base\Line\MemberRequest as BaseMemberRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rule;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Route;
+use App\Http\Requests\Admin\Base\Line\RefreshRequest as BaseRefreshRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+// use Illuminate\Validation\Rule;
+// use Illuminate\Foundation\Http\FormRequest;
+// use Illuminate\Support\Facades\Route;
 
-class MemberRequest extends BaseMemberRequest
+class RefreshRequest extends BaseRefreshRequest
 {
 
     /**

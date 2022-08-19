@@ -37,6 +37,8 @@ class CreateLineMembersTable extends Migration
             $table->string("api_token")->nullable();
             $table->timestamps();
 
+            $table->unique("api_token", "line_member_api_token");
+
             // 本アプリケーション側のユーザー用トークン
             $table->unique([
                 "line_account_id",

@@ -13,6 +13,14 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
         Route::get("/list", [
             GameTitleController::class, "list",
         ])->name("list");
+
+        Route::post("/create", [
+            GameTitleController::class, "create",
+        ])->name("create");
+
+        Route::post("/update/{game_title_id}", [
+            GameTitleController::class, "update",
+        ])->name("update");
     });
 
     // ゲームプレイヤーに関するAPI
@@ -28,7 +36,7 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
             PlayerController::class, "search",
         ])->name("search");
 
-        Route::get("/{player_id}", [
+        Route::get("/detail/{player_id}", [
             PlayerController::class, "detail",
         ])->name("detail");
 
