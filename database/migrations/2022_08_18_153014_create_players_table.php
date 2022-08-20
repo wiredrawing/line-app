@@ -21,7 +21,7 @@ class CreatePlayersTable extends Migration
             $table->string("given_name", 512)->nullable();
             $table->string("nickname", 512)->nullable();
             $table->string("email", 2048);
-            $table->text("description");
+            $table->text("description")->nullable();
             // プロフィール画面には表示させない
             $table->integer("gender_id")->nullable();
             $table->tinyInteger("is_displayed")->default(1);

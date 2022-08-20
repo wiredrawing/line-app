@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Front\Api\GameTitleController;
 use App\Http\Controllers\Front\Api\PlayerController;
+use App\Http\Controllers\Front\Api\PlayingGameTitleController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(["prefix" => "/", "as" => "top."], function () {
@@ -20,6 +21,25 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
 
         Route::post("/update/{id}", [
             GameTitleController::class, "update",
+        ])->name("update");
+    });
+
+    // 各ユーザーがプレイしているゲームタイトルについて
+    Route::group(["prefix" => "playingGameTitle", "as" => "playingGameTitle."], function () {
+
+        // 指定したユーザーのプレイ中ゲームタイトル一覧を取得する
+        Route::get("/{player_id}", [
+            PlayingGameTitleController::class, "detail",
+        ])->name("detail");
+
+        // 指定したユーザーに新たなプレイ中ゲームタイトルを追加する
+        Route::post("/create/{player_id}", [
+            PlayingGameTitleController::class, "create",
+        ])->name("create");
+
+        // 指定したユーザーの指定したプレイ中ゲームタイトルの情報を編集する
+        Route::post("/update/{id}", [
+            PlayingGameTitleController::class, "update",
         ])->name("update");
     });
 

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin\Line;
 
 use App\Http\Controllers\Controller;
 use App\Models\LineMember;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class MemberController extends Controller
@@ -17,7 +20,7 @@ class MemberController extends Controller
      * LINEログイン済みメンバー情報一覧
      *
      * @param Request $request
-     * @return void
+     * @return Application|Factory|View|void
      */
     public function index(Request $request)
     {
@@ -43,8 +46,8 @@ class MemberController extends Controller
      * 指定したline_member_idの情報を取得する
      *
      * @param Request $request
-     * @param integer $line_member_id
-     * @return void
+     * @param int $line_member_id
+     * @return Application|Factory|View|void
      */
     public function detail(Request $request, int $line_member_id = 0)
     {

@@ -21,6 +21,7 @@ class CreatePlayingGameTitlesTable extends Migration
             $table->integer("skill_level");
             // 遊ぶ頻度 1日/週 or 7日/週
             $table->integer("frequency");
+            $table->text("memo")->nullable();
             $table->timestamps();
 
             $table->unique([

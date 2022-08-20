@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGemeTitlesTable extends Migration
+class CreateGameTitlesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateGemeTitlesTable extends Migration
      */
     public function up()
     {
-        Schema::create('geme_titles', function (Blueprint $table) {
+        Schema::create('game_titles', function (Blueprint $table) {
             $table->id();
             $table->string("title", 512);
             // ゲームのプラットフォーム PS系,switch,xbox系
-            $table->integer("platform_id");
+            $table->string("platform_id");
             $table->text("description");
             // ゲームジャンル
             $table->integer("genre_id");
@@ -36,6 +36,6 @@ class CreateGemeTitlesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('geme_titles');
+        Schema::dropIfExists('game_titles');
     }
 }

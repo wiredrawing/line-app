@@ -51,5 +51,37 @@ return [
             "id" => hash("sha256", "Xbox Series X/S"),
             "value" => "Xbox Series X/S",
         ],
-    ]
+    ],
+
+    // プレイ頻度
+    "frequency_types" => [
+        [
+            "id" => 1,
+            "value" => "週1回",
+        ],
+        [
+            "id" => 2,
+            "value" => "週2回",
+        ],
+        [
+            "id" => 3,
+            "value" => "週3回",
+        ],
+        [
+            "id" => 4,
+            "value" => "週4回",
+        ],
+        [
+            "id" => 5,
+            "value" => "週5回",
+        ],
+        [
+            "id" => 6,
+            "value" => "週6回",
+        ],
+        [
+            "id" => 7,
+            "value" => "週7回",
+        ],
+    ],
 ];
