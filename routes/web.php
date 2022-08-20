@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Line\LoginController;
 use App\Http\Controllers\Line\LogoutController;
 use App\Http\Controllers\Line\CallbackController;
-use App\Http\Controllers\Api\Line\RefreshController;
-use App\Http\Controllers\Api\Line\ReserveController;
+// use App\Http\Controllers\Api\Line\RefreshController;
+// use App\Http\Controllers\Api\Line\ReserveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,12 +45,12 @@ Route::group(["prefix" => "line", "as" => "line."], function () {
         // LINEドメイン側で認証後に戻ってくるweb側のコールバックURL
         // GETパラメータで line_account_idというキーでline_accounts.idを渡す
         // ---------------------------------------------------------------
-        Route::get("/callback", [CallbackController::class, "index"])->name("index");
+        Route::get("/", [CallbackController::class, "index"])->name("index");
         // ---------------------------------------------------------------
         // LINE認証完了後,DBを更新後表示するLINEログイン完了ページ
         // GETパラメータで line_account_idというキーでline_accounts.idを渡す
         // ---------------------------------------------------------------
-        Route::get("/callback/completed", [CallbackController::class, "completed"])->name("completed");
+        Route::get("/completed", [CallbackController::class, "completed"])->name("completed");
     });
 
     // LINEアカウントからログアウトするURL

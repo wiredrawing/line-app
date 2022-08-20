@@ -59,6 +59,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path("routes/admin/web.php"));
             // 管理画面側APIのルーティング
             Route::prefix("admin/api")
+                ->middleware('api')
                 ->middleware("check.login.admin")
                 ->namespace($this->namespace)
                 ->group(base_path("routes/admin/api.php"));
@@ -66,7 +67,8 @@ class RouteServiceProvider extends ServiceProvider
             // フロントエンド側APIのルーティング
             Route::group(["prefix" => "front", "as" => "front."], function () {
                 Route::group(["prefix" => "api", "as" => "api."], function () {
-                    Route::namespace($this->namespace)
+                    Route::middleware('api')
+                        ->namespace($this->namespace)
                         ->group(base_path("routes/front/api.php"));
                 });
             });

@@ -18,6 +18,7 @@ class Player extends Model
         "given_name",
         "nickname",
         "email",
+        "description",
         "is_displayed",
         "is_deleted",
         "gender_id",

@@ -4,7 +4,9 @@ namespace App\Http\Requests\Front\Api;
 
 use App\Models\GameTitle;
 use App\Models\Player;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Route;
 
 class GameTitleRequest extends FormRequest
@@ -16,7 +18,7 @@ class GameTitleRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -107,5 +109,23 @@ class GameTitleRequest extends FormRequest
             }
         ];
         return $rules;
+    }
+
+    /**
+     * API実行時エラーをapplication/jsonで返却する
+     *
+     * @param Validator $validator
+     * @return void
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors()->toArray();
+        logger()->error($errors);
+        $response = [
+            "status" => false,
+            "response" => null,
+            "errors" => $errors,
+        ];
+        throw new HttpResponseException(response()->json($response), 422);
     }
 }

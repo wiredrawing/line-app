@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Front\Api;
 
 use App\Models\Player;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -50,11 +52,11 @@ class PlayerRequest extends FormRequest
                     "keyword" => [
                         "nullable",
                         "string",
-                    ]
+                    ],
                 ];
             }
         } else if ($this->isMethod("post")) {
-            if ($route_name === "front.api.to.player.update") {
+            if ($route_name === "front.api.top.player.update") {
                 $rules = [
                     "id" => [
                         "required",
@@ -81,8 +83,9 @@ class PlayerRequest extends FormRequest
                         "string",
                     ],
                     "nickname" => [
-                        "nullable",
+                        "required",
                         "string",
+                        "between:5,512"
                     ],
                     "gender_id" => [
                         "nullable",
@@ -92,6 +95,10 @@ class PlayerRequest extends FormRequest
                         "nullable",
                         "integer",
                     ],
+                    "description" => [
+                        "nullable",
+                        "string",
+                    ]
                 ];
             }
         }
@@ -125,5 +132,23 @@ class PlayerRequest extends FormRequest
             $this->route()->parameters(),
             $this->all()
         );
+    }
+
+    /**
+     * API実行時エラーをapplication/jsonで返却する
+     *
+     * @param Validator $validator
+     * @return void
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors()->toArray();
+        logger()->error($errors);
+        $response = [
+            "status" => false,
+            "response" => null,
+            "errors" => $errors,
+        ];
+        throw new HttpResponseException(response()->json($response), 422);
     }
 }

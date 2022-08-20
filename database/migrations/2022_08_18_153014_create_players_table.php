@@ -21,6 +21,7 @@ class CreatePlayersTable extends Migration
             $table->string("given_name", 512)->nullable();
             $table->string("nickname", 512)->nullable();
             $table->string("email", 2048);
+            $table->text("description");
             // プロフィール画面には表示させない
             $table->integer("gender_id")->nullable();
             $table->tinyInteger("is_displayed")->default(1);
@@ -28,7 +29,7 @@ class CreatePlayersTable extends Migration
             // プレイヤーの検索結果に表示させるかどうか?
             $table->tinyInteger("is_published")->default(0);
             // プレイヤーのAPIコール用に使用するtoken
-            $table->string("api_token", 2048)->unique();
+            $table->string("api_token", 2048);
             $table->timestamps();
             $table->unique("api_token", "player_api_token");
         });
