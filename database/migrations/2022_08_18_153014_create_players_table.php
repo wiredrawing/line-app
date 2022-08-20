@@ -30,7 +30,6 @@ class CreatePlayersTable extends Migration
             // プレイヤーのAPIコール用に使用するtoken
             $table->string("api_token", 2048)->unique();
             $table->timestamps();
-
             $table->unique("api_token", "player_api_token");
         });
     }

@@ -86,14 +86,15 @@ class LoginController extends Controller
                 throw new \Exception("只今サーバーが混み合っているようです.");
             }
 
+            $redirect_uri = route("line.callback.index", [
+                "line_account_id" => $line_account->id,
+                "api_token" => $api_token,
+            ]);
             $query_build = [
                 "response_type" => "code",
                 "client_id" => $line_account->channel_id,
-                // LINEログイン完了後,戻ってくる本アプリケーションのURL
-                "redirect_uri" => route("line.callback.index", [
-                    "line_account_id" => $line_account->id,
-                    "api_token" => $api_token,
-                ]),
+                // ラインログイン完了後,戻ってくる本アプリケーションのURL
+                "redirect_uri" => $redirect_uri,
                 "scope" => "profile openid email",
                 "nonce" => hash("sha256", Str::uuid()),
                 "state" => hash("sha256", Str::uuid()),

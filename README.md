@@ -1,7 +1,7 @@
 
 ## LINEチャネルの登録
 
-**http://localhost:8000/admin/api/line/account/create**
+**http://127.0.0.1:8000/admin/api/line/account/create**
 
 ```post.json
 {
@@ -18,7 +18,7 @@
 
 ## 指定したLINEチャネルに現在登録中の未送信メッセージ一覧を取得する
 
-**http://localhost:8000/admin/api/line/reserve/unsent/{line_account_id}**  
+**http://127.0.0.1:8000/admin/api/line/reserve/unsent/{line_account_id}**  
 
 ```ini
 {line_account_id} => line_accountsテーブルのプライマリキー
@@ -28,7 +28,7 @@
 
 ## 指定したLINEチャンネルにメッセージの予約設定をする
 
-**http://localhost:8000/admin/api/line/reserve/reserve/{line_account_id}**
+**http://127.0.0.1:8000/admin/api/line/reserve/reserve/{line_account_id}**
 
 ```post.json
 {
@@ -49,7 +49,7 @@
 
 ## 指定したLINEチャネルに任意のメッセージを複数送信する
 
-**http://localhost:8000/admin/api/line/reserve/reserve/{line_reserve_id}**
+**http://127.0.0.1:8000/admin/api/line/reserve/push/{line_reserve_id}**
 
 ```post.json
 {
@@ -59,7 +59,7 @@
 
 
 ## LINEログインしたline memberのアクセストークンをリフレッシュする
-**http://localhost:8000/admin/api/line/refresh/index**
+**http://127.0.0.1:8000/admin/api/line/refresh/index**
 
 ```post.json
 {

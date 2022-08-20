@@ -36,6 +36,7 @@ class CreateLineAccountsTable extends Migration
 
             // unique 制約
             $table->unique("messaging_channel_access_token");
+            $table->unique("api_token");
             // channel名(本アプリケーション内でのみ使用)
             $table->unique([
                 "channel_name",

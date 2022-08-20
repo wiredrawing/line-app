@@ -41,11 +41,10 @@ class CallbackController extends Controller
                 "player",
             ])->findOrFail($line_member_id);
 
-            print_r($line_member->toArray());
             // LINEログイン完了画面へ遷移
             return redirect()->route("line.callback.completed", [
                 "line_account_id" => $validated_data["line_account_id"],
-                "api_token" => $validated_data["api_token"],
+                // プレイヤーレコードに紐づいたapi_tokenを一緒に返却する
                 "api_token" => $line_member->player->api_token,
             ]);
         } catch (Exception $e) {

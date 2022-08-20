@@ -10,15 +10,15 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
     // ゲームタイトルに関するAPI
     Route::group(["prefix" => "title", "as" => "gameTitle."], function () {
         // 現在,登録中のゲームタイトル一覧を取得する
-        Route::get("/list", [
-            GameTitleController::class, "list",
-        ])->name("list");
+        Route::get("/search", [
+            GameTitleController::class, "search",
+        ])->name("search");
 
         Route::post("/create", [
             GameTitleController::class, "create",
         ])->name("create");
 
-        Route::post("/update/{game_title_id}", [
+        Route::post("/update/{id}", [
             GameTitleController::class, "update",
         ])->name("update");
     });
@@ -26,21 +26,16 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
     // ゲームプレイヤーに関するAPI
     Route::group(["prefix" => "player", "as" => "player."], function () {
 
-        // 検索可能なゲームプレイヤー一覧を取得する
-        Route::get("/list", [
-            PlayerController::class, "list",
-        ])->name("list");
-
-        // プレイヤーの検索
+        // プレイヤーの検索(検索可能なゲームプレイヤー一覧を取得する)
         Route::get("/search", [
             PlayerController::class, "search",
         ])->name("search");
 
-        Route::get("/detail/{player_id}", [
+        Route::get("/detail/{id}", [
             PlayerController::class, "detail",
         ])->name("detail");
 
-        Route::post("/update/{player_id}", [
+        Route::post("/update/{id}", [
             PlayerController::class, "update",
         ])->name("update");
     });

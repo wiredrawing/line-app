@@ -41,29 +41,24 @@ class ReserveRequest extends FormRequest
             // API系へのリクエストの場合
             if (Route::is("admin.api.*")) {
                 if ($route_name === "admin.api.line.reserve.unsent") {
-                    // 未送信のメッセージ一覧を取得する
-                    $rules = [
-                        "line_account_id" => [
-                            "required",
-                            "integer",
-                        ]
-                    ];
+                    // ルールを策定
                 } elseif ($route_name === "admin.api.line.reserve.sent") {
-                    $rules = [
-                        "line_account_id" => [
-                            "required",
-                            "integer",
-                        ]
-                    ];
+                    // ルールを策定
                 } elseif ($route_name === "admin.api.line.reserve.fetchReserve") {
-                    $rules = [
-                        // 編集用に取得したいline_reservesのid
-                        "line_reserve_id" => [
-                            "required",
-                            "integer",
-                        ],
-                    ];
+                    // ルールを策定
                 }
+                // 共通ルールを定義
+                $rules["line_account_id"] = [
+                    "required",
+                    "integer",
+                    function ($attribute, $value, $fail) {
+                        $line_account = LineAccount::find($value);
+                        if ($line_account === null) {
+                            return $fail("Could not find line account which you selected.");
+                        }
+                        return  true;
+                    }
+                ];
             } else {
                 if ($route_name === "admin.line.reserve.index") {
                     // -----------------------------------------------------
@@ -175,9 +170,9 @@ class ReserveRequest extends FormRequest
     public function validationData():array
     {
         $validation_data = array_merge(
-            $this->all(),
             $this->input(),
             $this->route()->parameters(),
+            $this->all(),
         );
         // リクエスト内容のロギング
         logger()->info($validation_data);
