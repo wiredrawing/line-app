@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Front\Api\FollowerController;
 use App\Http\Controllers\Front\Api\GameTitleController;
 use App\Http\Controllers\Front\Api\PlayerController;
 use App\Http\Controllers\Front\Api\PlayingGameTitleController;
@@ -58,5 +59,34 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
         Route::post("/update/{id}", [
             PlayerController::class, "update",
         ])->name("update");
+    });
+
+    // プレイヤーのフォロワー関係
+    Route::group(["prefix" => "follower", "as" => "follower."], function () {
+
+        // 指定したプレイヤーIDがフォローしている一覧を取得する
+        Route::get("/following/{player_id}", [
+            FollowerController::class, "list",
+        ])->name("following");
+
+        // 指定したユーザーをフォローしているプレイヤー
+        Route::get("/followed/{player_id}", [
+            FollowerController::class, "followed",
+        ])->name("followed");
+
+        // 指定したplayerがすでにマッチング済みのプレイヤー一覧を取得する
+        Route::get("/matching/{player_id}", [
+            FollowerController::class, "matching",
+        ])->name("matching");
+
+        // 指定したplayerをフォローする
+        Route::post("/create", [
+            FollowerController::class, "create",
+        ])->name("create");
+
+        // 指定したplayerのフォローを外す
+        Route::post("/unfollow", [
+            FollowerController::class, "unfollow",
+        ])->name("unfollow");
     });
 });
