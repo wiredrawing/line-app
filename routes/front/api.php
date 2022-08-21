@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Front\Api\FollowerController;
 use App\Http\Controllers\Front\Api\GameTitleController;
+use App\Http\Controllers\Front\Api\ImageController;
 use App\Http\Controllers\Front\Api\PlayerController;
 use App\Http\Controllers\Front\Api\PlayingGameTitleController;
 use Illuminate\Support\Facades\Route;
@@ -88,5 +89,18 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
         Route::post("/unfollow", [
             FollowerController::class, "unfollow",
         ])->name("unfollow");
+    });
+
+
+    // 画像アップロード関連
+    Route::group(["prefix" => "image", "as" => "image."], function () {
+
+        Route::get("/show/{id}", [
+            ImageController::class, "show",
+        ])->name("show");
+
+        Route::post("/create", [
+            ImageController::class, "create",
+        ])->name("create");
     });
 });

@@ -21,6 +21,8 @@ class CreatePlayingGameTitlesTable extends Migration
             $table->integer("skill_level");
             // 遊ぶ頻度 1日/週 or 7日/週
             $table->integer("frequency");
+            // そのゲームのアカウントを登録(そのゲーム上で一意に識別できるID
+            $table->string("game_account_id", 512)->nullable();
             $table->text("memo")->nullable();
             $table->timestamps();
 
