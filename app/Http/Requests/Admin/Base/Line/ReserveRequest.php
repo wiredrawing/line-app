@@ -104,7 +104,7 @@ class ReserveRequest extends FormRequest
                             // ----------------------------------------------------
                             $line_account = LineAccount::where([
                                 "api_token" => $value,
-                                "is_enabled" => Config("const.binary_type.on"),
+                                "is_displayed" => Config("const.binary_type.on"),
                             ])
                                 ->find($this->route()->parameter("line_account_id"));
                             if ($line_account === null) {

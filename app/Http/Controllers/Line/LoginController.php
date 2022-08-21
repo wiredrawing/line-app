@@ -29,8 +29,8 @@ class LoginController extends Controller
     {
         try {
             $line_accounts = LineAccount::where([
-                "is_enabled" => Config("const.binary_type.on"),
-                "is_hidden" => Config("const.binary_type.off"),
+                "is_displayed" => Config("const.binary_type.on"),
+                "is_deleted" => Config("const.binary_type.off"),
             ])
                 ->where(
                     "application_key", "!=", null

@@ -30,8 +30,8 @@ class CreateLineAccountsTable extends Migration
             $table->string("api_token")->nullable();
             // 本アプリケーションをある程度非公開にするためのアプリケーションキー
             $table->string("application_key", 512)->nullable();
-            $table->tinyInteger("is_enabled")->default(1);
-            $table->tinyInteger("is_hidden")->default(0);
+            $table->tinyInteger("is_displayed")->default(1);
+            $table->tinyInteger("is_deleted")->default(0);
             $table->timestamps();
 
             // unique 制約

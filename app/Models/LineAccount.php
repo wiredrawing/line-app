@@ -23,8 +23,8 @@ class LineAccount extends Model
         "api_token",
         "webhook_url",
         "application_key",
-        "is_enabled",
-        "is_hidden",
+        "is_displayed",
+        "is_deleted",
     ];
 
     public function line_callback_urls()

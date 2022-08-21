@@ -27,8 +27,8 @@ class AccountController extends Controller
             logger()->info($validated);
 
             $line_accounts = LineAccount::where([
-                "is_enabled" => Config("const.binary_type.on"),
-                "is_hidden" => Config("const.binary_type.off")
+                "is_displayed" => Config("const.binary_type.on"),
+                "is_deleted" => Config("const.binary_type.off")
             ])
             ->get();
 

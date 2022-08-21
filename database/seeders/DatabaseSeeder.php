@@ -13,6 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        // 一度にSeederを実行
+        $this->call([
+            GameTitleSeeder::class,
+            LineAccountSeeder::class,
+        ]);
     }
 }
