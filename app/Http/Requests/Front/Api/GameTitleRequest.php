@@ -126,6 +126,6 @@ class GameTitleRequest extends FormRequest
             "response" => null,
             "errors" => $errors,
         ];
-        throw new HttpResponseException(response()->json($response), 422);
+        throw new HttpResponseException(response()->json($response));
     }
 }

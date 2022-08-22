@@ -30,6 +30,18 @@ class ImageRequest extends FormRequest
         ];
     }
 
+
+    /**
+     * @return array|mixed
+     */
+    public function validationData() {
+        return array_merge(
+            $this->input(),
+            $this->route()->parameters(),
+            $this->all(),
+        );
+    }
+
     /**
      * API実行時エラーをapplication/jsonで返却する
      *
@@ -45,6 +57,6 @@ class ImageRequest extends FormRequest
             "response" => null,
             "errors" => $errors,
         ];
-        throw new HttpResponseException(response()->json($response), 422);
+        throw new HttpResponseException(response()->json($response));
     }
 }
