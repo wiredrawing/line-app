@@ -21,6 +21,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        // Cross Origin Sharing 対策
         \App\Http\Middleware\CrossOrigin::class,
     ];
 
@@ -68,5 +69,7 @@ class Kernel extends HttpKernel
         // 以下独自ミドルウェア
         // -------------------------------------------------
         "check.login.admin" => \App\Http\Middleware\CheckLoginAdminUrl::class,
+        // Cross Origin Sharing 対策
+        "original.cors" => \App\Http\Middleware\CrossOrigin::class,
     ];
 }

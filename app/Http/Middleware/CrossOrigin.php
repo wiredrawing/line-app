@@ -3,9 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class CrossOrigin
 {
@@ -13,12 +11,16 @@ class CrossOrigin
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param  \Closure(Request): (Response|RedirectResponse)  $next
-     * @return Response|RedirectResponse
+     * @param Closure $next
+     * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
         $response = $next($request);
+        // header()メソッドにアクセスできない場合即時 return
+        if (in_array("header", get_class_methods($response)) !== true) {
+            return $response;
+        }
         // 独自のhttpヘッダーを返却する
         $response->header("Original-Header", "wire-drawing.co.jp");
         // cors対応

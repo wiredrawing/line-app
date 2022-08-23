@@ -15,10 +15,12 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             // 本テーブルは物理削除仕様とする
-            $table->uuid("id");
+            $table->uuid("id")->primary();
             $table->string("filename", 512);
             $table->string("extension", 512);
             $table->timestamps();
+
+            $table->unique("filename");
         });
     }
 

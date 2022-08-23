@@ -126,8 +126,11 @@ class PlayingGameTitleRequest extends FormRequest
      */
     public function validationData()
     {
-        return array_merge($this->input(), $this->route()
-            ->parameters(), $this->all(),);
+        return array_merge(
+            $this->input(),
+            $this->route()->parameters(),
+            $this->all(),
+        );
     }
 
     /**

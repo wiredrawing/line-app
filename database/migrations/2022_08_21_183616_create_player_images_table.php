@@ -15,7 +15,7 @@ class CreatePlayerImagesTable extends Migration
     {
         Schema::create('player_images', function (Blueprint $table) {
             // 本テーブルは物理削除仕様とする
-            $table->uuid("id");
+            $table->uuid("id")->primary();
             $table->uuid("image_id");
             $table->bigInteger("player_id");
             $table->tinyInteger("is_displayed")->default(Config("const.binary_type.on"));

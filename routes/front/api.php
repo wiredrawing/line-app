@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(["prefix" => "/", "as" => "top."], function () {
 
-
     // ゲームタイトルに関するAPI
     Route::group(["prefix" => "title", "as" => "gameTitle."], function () {
         // 現在,登録中のゲームタイトル一覧を取得する
@@ -99,8 +98,16 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
             ImageController::class, "show",
         ])->name("show");
 
+        Route::get("/list", [
+            ImageController::class, "list",
+        ])->name("list");
+
         Route::post("/create", [
             ImageController::class, "create",
         ])->name("create");
+
+        Route::post("/delete", [
+            ImageController::class, "delete",
+        ])->name("delete");
     });
 });
