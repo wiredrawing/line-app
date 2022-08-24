@@ -46,7 +46,7 @@ class PlayingGameTitleController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function update(PlayingGameTitleRequest $request, int $id)
+    public function update(PlayingGameTitleRequest $request, int $id): JsonResponse
     {
         try {
             $validated_data = $request->validated();
