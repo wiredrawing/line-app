@@ -16,12 +16,36 @@ class PlayerController extends Controller
      * 指定したplayer_idのプレイヤー情報を取得する
      *
      * @param PlayerRequest $request
-     * @param int $player_id
-     * @return void
+     * @param int $id
+     * @return JsonResponse
      */
-    public function detail(PlayerRequest $request, int $player_id)
+    public function detail(PlayerRequest $request, int $id)
     {
-
+        try {
+            $player = Player::with([
+                "line_member",
+                "playing_game_titles",
+                "following_players",
+                "players_following_you",
+                "player_images.image",
+            ])->findOrFail($id);
+            $json = [
+                "status" => true,
+                "code" => 200,
+                "response" => [
+                    "player" => $player,
+                ],
+            ];
+            return response()->json($json);
+        } catch (\Throwable $e) {
+            logger()->error($e);
+            $json = [
+                "status" => false,
+                "code" => 400,
+                "response" => $e->getMessage(),
+            ];
+            return response()->json($json);
+        }
     }
 
     /**

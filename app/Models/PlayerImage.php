@@ -3,8 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+// プライマリキーをuuidで代用するために必要
+use GoldSpecDigital\LaravelEloquentUUID\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
+
 
 class PlayerImage extends Model
 {

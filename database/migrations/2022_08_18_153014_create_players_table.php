@@ -30,6 +30,8 @@ class CreatePlayersTable extends Migration
             $table->tinyInteger("is_published")->default(0);
             // プレイヤーのAPIコール用に使用するtoken
             $table->string("api_token", 2048);
+            // なんかメモ用に
+            $table->text("memo")->nullable();
             $table->timestamps();
             $table->unique("api_token", "player_api_token");
         });

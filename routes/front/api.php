@@ -4,6 +4,7 @@ use App\Http\Controllers\Front\Api\FollowerController;
 use App\Http\Controllers\Front\Api\GameTitleController;
 use App\Http\Controllers\Front\Api\ImageController;
 use App\Http\Controllers\Front\Api\PlayerController;
+use App\Http\Controllers\Front\Api\PlayerImageController;
 use App\Http\Controllers\Front\Api\PlayingGameTitleController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +60,24 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
         Route::post("/update/{id}", [
             PlayerController::class, "update",
         ])->name("update");
+
+        // Playerに関するイメージを登録する (アイコンやプレイ画像やスクリーンショット)
+        Route::group(["prefix" => "image", "as" => "image."], function () {
+            // playerイメージの登録
+            Route::post("/create",[
+                PlayerImageController::class, "create"
+            ])->name("create");
+
+            // 指定したイメージの削除
+            Route::post("/delete/{id}", [
+                PlayerImageController::class, "delete",
+            ])->name("delete");
+
+            // 指定したplayer_idに紐づく登録ずみ画像リソースを返却
+            Route::get("/list/{player_id}", [
+                PlayerImageController::class, "list",
+            ])->name("list");
+        });
     });
 
     // プレイヤーのフォロワー関係

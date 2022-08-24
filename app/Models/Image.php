@@ -18,12 +18,16 @@ class Image extends Model
     public $fillable = [
         "filename",
         "extension",
+        "uploaded_at",
     ];
 
     public $appends = [
         "show_url",
     ];
 
+    public $dates = [
+        "uploaded_at",
+    ];
 
     /**
      * 画像表示用 URL

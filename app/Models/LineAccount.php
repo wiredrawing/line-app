@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class LineAccount extends Model
 {
@@ -27,12 +28,18 @@ class LineAccount extends Model
         "is_deleted",
     ];
 
-    public function line_callback_urls()
+    /**
+     * @return HasMany
+     */
+    public function line_callback_urls(): HasMany
     {
         return $this->hasMany(LineCallbackUrl::class, "line_account_id", "id");
     }
 
-    public function line_members()
+    /**
+     * @return HasMany
+     */
+    public function line_members(): HasMany
     {
         return $this->hasMany(LineMember::class, "line_account_id", "id");
     }

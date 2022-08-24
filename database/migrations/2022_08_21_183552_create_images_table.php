@@ -18,6 +18,10 @@ class CreateImagesTable extends Migration
             $table->uuid("id")->primary();
             $table->string("filename", 512);
             $table->string("extension", 512);
+            // アップロード画像がアップされたそのタイミングの日時
+            // created_atでも代用できるかカラムに複数の用途を持たせるべきではないので
+            // 個別にこの項目を用意する
+            $table->dateTime("uploaded_at");
             $table->timestamps();
 
             $table->unique("filename");

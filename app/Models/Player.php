@@ -18,6 +18,7 @@ class Player extends Model
         "middle_name",
         "given_name",
         "nickname",
+        // API経由ではメールアドレスは変更させない
         "email",
         "description",
         "is_displayed",
@@ -25,6 +26,7 @@ class Player extends Model
         "gender_id",
         "is_published",
         "api_token",
+        "memo",
     ];
 
     public $appends = [
@@ -69,10 +71,19 @@ class Player extends Model
     }
 
     /**
+     * 当該のplayer情報に紐づく画像一覧を取得する
+     * @return HasMany
+     */
+    public function player_images(): HasMany
+    {
+        return $this->hasMany(PlayerImage::class, "player_id", "id");
+    }
+
+    /**
      * 当該playerとマッチングしているユーザー一覧を取得
      */
-    public function getPlayersWithYouAttribute()
+    public function getPlayersMatchingWithYouAttribute(): array
     {
-
+        return [];
     }
 }

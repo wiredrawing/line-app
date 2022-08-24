@@ -97,6 +97,10 @@ class PlayerRequest extends FormRequest
                     "description" => [
                         "nullable",
                         "string",
+                    ],
+                    "memo" => [
+                        "nullable",
+                        "string",
                     ]
                 ];
             }
