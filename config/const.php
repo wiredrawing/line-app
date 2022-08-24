@@ -32,6 +32,10 @@ return [
             "value" => "Play Station 5",
         ],
         [
+            "id" => hash("sha256", "Nintendo Switch Lite"),
+            "value" => "Nintendo Switch Lite",
+        ],
+        [
             "id" => hash("sha256", "Nintendo Switch"),
             "value" => "Nintendo Switch",
         ],
@@ -50,6 +54,14 @@ return [
         [
             "id" => hash("sha256", "Xbox Series X/S"),
             "value" => "Xbox Series X/S",
+        ],
+        [
+            "id" => hash("sha256", "PC"),
+            "value" => "PC",
+        ],
+        [
+            "id" => hash("sha256", "Mobile Phone"),
+            "value" => "Mobile Phone",
         ],
     ],
 
