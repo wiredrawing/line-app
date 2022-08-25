@@ -20,6 +20,10 @@ class CreatePlayerImagesTable extends Migration
             $table->bigInteger("player_id");
             $table->tinyInteger("is_displayed")->default(Config("const.binary_type.on"));
             $table->timestamps();
+            $table->unique([
+                "image_id",
+                "player_id",
+            ], "image_id_player_id");
         });
     }
 

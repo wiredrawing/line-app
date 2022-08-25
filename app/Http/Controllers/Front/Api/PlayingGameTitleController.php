@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Front\Api\PlayerImageRequest;
 use App\Http\Requests\Front\Api\PlayingGameTitleRequest;
 use App\Models\PlayingGameTitle;
 use Illuminate\Http\JsonResponse;
@@ -62,6 +63,35 @@ class PlayingGameTitleController extends Controller
                 "response" => [
                     "playing_game_title" => $playing_game_title,
                 ],
+            ];
+            return response()->json($json);
+        } catch (\Throwable $e) {
+            $json = [
+                "status" => false,
+                "code" => 400,
+                "response" => $e->getMessage(),
+            ];
+            return response()->json($json);
+        }
+    }
+
+    /**
+     * 指定したプレイ中のゲームタイトルを削除する
+     * @param PlayerImageRequest $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function delete(PlayerImageRequest $request, int $id): JsonResponse
+    {
+        try {
+            $validated_data = $request->validated();
+            logger()->info($validated_data);
+            $playing_game_title = PlayingGameTitle::findOrFail($id);
+            $result = $playing_game_title->delete();
+            $json = [
+                "status" => true,
+                "code" => 200,
+                "response" => $result,
             ];
             return response()->json($json);
         } catch (\Throwable $e) {

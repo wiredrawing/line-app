@@ -2,14 +2,12 @@
 
 namespace App\Http\Requests\Front\Api;
 
+use App\Http\Requests\Front\Api\Base\BaseRequest;
 use App\Models\Player;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
-class ImageRequest extends FormRequest
+class ImageRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -116,34 +114,5 @@ class ImageRequest extends FormRequest
             "filename.max" => "最大アップ容量は10MBです",
             "filename.image" => "アップロード可能なファイルは画像ファイルのみです",
         ];
-    }
-
-    /**
-     * @return array|mixed
-     */
-    public function validationData() {
-        return array_merge(
-            $this->input(),
-            $this->route()->parameters(),
-            $this->all(),
-        );
-    }
-
-    /**
-     * API実行時エラーをapplication/jsonで返却する
-     *
-     * @param Validator $validator
-     * @return void
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        $errors = $validator->errors()->toArray();
-        logger()->error("errors --->", $errors);
-        $response = [
-            "status" => false,
-            "response" => null,
-            "errors" => $errors,
-        ];
-        throw new HttpResponseException(response()->json($response));
     }
 }

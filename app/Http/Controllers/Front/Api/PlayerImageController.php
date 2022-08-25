@@ -21,6 +21,7 @@ class PlayerImageController extends Controller
     {
         try {
             $validated_data = $request->validated();
+            print_r($validated_data);
             $player_image = PlayerImage::create($validated_data);
 
             if ($player_image === null) {

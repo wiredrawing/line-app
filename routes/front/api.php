@@ -43,6 +43,11 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
         Route::post("/update/{id}", [
             PlayingGameTitleController::class, "update",
         ])->name("update");
+
+        // 指定したプレイ中のゲームタイトルの削除
+        Route::post("/delete/{id}", [
+            PlayingGameTitleController::class, "delete",
+        ])->name("delete");
     });
 
     // ゲームプレイヤーに関するAPI

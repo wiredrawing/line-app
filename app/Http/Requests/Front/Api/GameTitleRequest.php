@@ -2,21 +2,18 @@
 
 namespace App\Http\Requests\Front\Api;
 
-use App\Models\GameTitle;
+use App\Http\Requests\Front\Api\Base\BaseRequest;
 use App\Models\Player;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Route;
 
-class GameTitleRequest extends FormRequest
+class GameTitleRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -26,70 +23,77 @@ class GameTitleRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         $rules = [];
         $route_name = Route::currentRouteName();
-        if ($this->isMethod("get")) {
-            if ($route_name === "front.api.top.gameTitle.search") {
-                // 現在,有効なゲームタイトル一覧を返却
-                $rules = [
-                    "keyword" => [
-                        "nullable",
-                        "string",
-                    ]
-                ];
-            }
-        } else if ($this->isMethod("post")) {
-            if ($route_name === "front.api.top.gameTitle.create") {
-                // 新規のゲームタイトル追加
-                $rules = [
-                    "title" => [
-                        "required",
-                        "string",
-                        "between:1,512",
-                    ],
-                    "platform_id" => [
-                        "required",
-                        "integer",
-                    ],
-                    "description" => [
-                        "required",
-                        "string",
-                        "max:10000",
-                    ],
-                    "genre_id" => [
-                        "required",
-                        "integer",
-                    ],
-                ];
-            } else if ($route_name === "front.api.top.gameTitle.update") {
-                // 既存の登録ずみゲームタイトルの編集処理
-                $rules = [
-                    "id" => [
-                        "required",
-                        "integer",
-                    ],
-                    "title" => [
-                        "required",
-                        "string",
-                        "between:1,512",
-                    ],
-                    "platform_id" => [
-                        "required",
-                        "integer",
-                    ],
-                    "description" => [
-                        "required",
-                        "string",
-                        "max:10000",
-                    ],
-                    "genre_id" => [
-                        "required",
-                        "integer",
-                    ],
-                ];
-            }
+        switch (strtoupper($this->method())) {
+            case "GET":
+                if ($route_name === "front.api.top.gameTitle.search") {
+                    // 現在,有効なゲームタイトル一覧を返却
+                    $rules = [
+                        "keyword" => [
+                            "nullable",
+                            "string",
+                        ],
+                    ];
+                }
+                break;
+
+            case "POST":
+                if ($route_name === "front.api.top.gameTitle.create") {
+                    // 新規のゲームタイトル追加
+                    $rules = [
+                        "title" => [
+                            "required",
+                            "string",
+                            "between:1,512",
+                        ],
+                        "platform_id" => [
+                            "required",
+                            "integer",
+                        ],
+                        "description" => [
+                            "required",
+                            "string",
+                            "max:10000",
+                        ],
+                        "genre_id" => [
+                            "required",
+                            "integer",
+                        ],
+                    ];
+                } else if ($route_name === "front.api.top.gameTitle.update") {
+                    // 既存の登録ずみゲームタイトルの編集処理
+                    $rules = [
+                        "id" => [
+                            "required",
+                            "integer",
+                        ],
+                        "title" => [
+                            "required",
+                            "string",
+                            "between:1,512",
+                        ],
+                        "platform_id" => [
+                            "required",
+                            "integer",
+                        ],
+                        "description" => [
+                            "required",
+                            "string",
+                            "max:10000",
+                        ],
+                        "genre_id" => [
+                            "required",
+                            "integer",
+                        ],
+                    ];
+                }
+                break;
+            default:
+                // 該当しないルーティング
+                break;
         }
 
         // リクエストには常にplayer固有のapi_tokenが必要
@@ -101,31 +105,15 @@ class GameTitleRequest extends FormRequest
                 logger()->info($attribute);
                 $player = Player::where([
                     "api_token" => $value,
-                ])->get()->first();
+                ])
+                    ->get()
+                    ->first();
                 if ($player === null) {
                     return $fail(":attributeが不正な値です.");
                 }
                 return true;
-            }
+            },
         ];
         return $rules;
-    }
-
-    /**
-     * API実行時エラーをapplication/jsonで返却する
-     *
-     * @param Validator $validator
-     * @return void
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        $errors = $validator->errors()->toArray();
-        logger()->error($errors);
-        $response = [
-            "status" => false,
-            "response" => null,
-            "errors" => $errors,
-        ];
-        throw new HttpResponseException(response()->json($response));
     }
 }

@@ -19,9 +19,11 @@ class PlayerController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function detail(PlayerRequest $request, int $id)
+    public function detail(PlayerRequest $request, int $id): JsonResponse
     {
         try {
+            $validated_data = $request->validated();
+            logger()->info($validated_data);
             $player = Player::with([
                 "line_member",
                 "playing_game_titles",
@@ -67,7 +69,7 @@ class PlayerController extends Controller
                     "is_published" => Config("const.binary_type.on"),
                 ])
                 ->when(true, function($query) use ($validated_data) {
-                    // keywordにようるワード検索の場合
+                    // keywordによるワード検索の場合
                     if (isset($validated_data["keyword"]) && strlen($validated_data["keyword"])) {
                         return $query
                             ->where("description", "like", "%".$validated_data["keyword"]."%")

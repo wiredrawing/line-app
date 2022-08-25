@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Front\Api;
 
 use App\Models\Player;
+use App\Models\PlayingGameTitle;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Route;
@@ -93,6 +94,14 @@ class PlayingGameTitleRequest extends FormRequest
                         "integer",
                     ],
                 ];
+            } else if ($route_name === "front.api.top.playingGameTitle.delete") {
+                $rules = [
+                    "id" => [
+                        "required",
+                        "integer",
+                        Rule::exists("playing_game_titles", "id")
+                    ]
+                ];
             }
         }
 
@@ -118,37 +127,5 @@ class PlayingGameTitleRequest extends FormRequest
             },
         ];
         return $rules;
-    }
-
-
-    /**
-     * @return array|mixed
-     */
-    public function validationData()
-    {
-        return array_merge(
-            $this->input(),
-            $this->route()->parameters(),
-            $this->all(),
-        );
-    }
-
-    /**
-     * API実行時エラーをapplication/jsonで返却する
-     *
-     * @param Validator $validator
-     * @return void
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        $errors = $validator->errors()
-            ->toArray();
-        logger()->error($errors);
-        $response = [
-            "status" => false,
-            "response" => null,
-            "errors" => $errors,
-        ];
-        throw new HttpResponseException(response()->json($response));
     }
 }

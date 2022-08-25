@@ -2,20 +2,18 @@
 
 namespace App\Http\Requests\Front\Api;
 
+use App\Http\Requests\Front\Api\Base\BaseRequest;
 use App\Models\Player;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Http\FormRequest;
 
-class PlayerRequest extends FormRequest
+class PlayerRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize() :bool
     {
         return true;
     }
@@ -123,35 +121,5 @@ class PlayerRequest extends FormRequest
             }
         ];
         return $rules;
-    }
-
-    /**
-     * @return array
-     */
-    public function validationData(): array
-    {
-        return array_merge(
-            $this->input(),
-            $this->route()->parameters(),
-            $this->all()
-        );
-    }
-
-    /**
-     * API実行時エラーをapplication/jsonで返却する
-     *
-     * @param Validator $validator
-     * @return void
-     */
-    protected function failedValidation(Validator $validator)
-    {
-        $errors = $validator->errors()->toArray();
-        logger()->error($errors);
-        $response = [
-            "status" => false,
-            "response" => null,
-            "errors" => $errors,
-        ];
-        throw new HttpResponseException(response()->json($response));
     }
 }
