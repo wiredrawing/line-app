@@ -33,7 +33,7 @@ class ReserveController extends Controller
         try {
             $validated = $request->validated();
 
-            logger()->info($validated);
+            logger()->info("validated ====> ", $validated);
 
             // ----------------------------------------------
             // LINE配信予約レコードを作成する
@@ -90,9 +90,9 @@ class ReserveController extends Controller
      *
      * @param ReserveRequest $request
      * @param int $line_account_id
-     * @return Application|Factory|View|JsonResponse
+     * @return JsonResponse
      */
-    public function unsentMessages(ReserveRequest $request, int $line_account_id)
+    public function unsentMessages(ReserveRequest $request, int $line_account_id): JsonResponse
     {
         try {
             $validated = $request->validated();
@@ -107,14 +107,18 @@ class ReserveController extends Controller
 
             $response = [
                 "status" => true,
+                "code" => 200,
                 "response" => $line_reserves,
             ];
             return response()->json($response);
         } catch (Exception $e) {
             logger()->error($e);
-            return view("errors.index", [
-                "e" => $e,
-            ]);
+            $response = [
+                "status" => false,
+                "code" => 400,
+                "response" => $e->getMessage(),
+            ];
+            return response()->json($response);
         }
     }
 
@@ -167,23 +171,25 @@ class ReserveController extends Controller
             DB::beginTransaction();
 
             $validated = $request->validated();
-            logger()->info($validated);
+            logger()->info("validated ====> ", $validated);
 
             $line_reserve = LineReserve::with([
                 "line_messages",
+                "line_account",
             ])
-                ->where("id", $validated["line_reserve_id"])
                 ->where("is_displayed", Config("const.binary_type.on"))
                 ->where("is_sent", Config("const.binary_type.off"))
                 ->whereHas("line_messages")
-                ->get()
-                ->first();
+                ->findOrFail($validated["line_reserve_id"]);
+
             if ($line_reserve === null) {
                 throw new Exception("指定したLINE予約メッセージが見つかりません");
             }
             $messages_to_push = [];
             foreach ($line_reserve->line_messages as $index => $message) {
-                $messages_to_push[] = $message->toArray();
+                $temp = $message->toArray();
+                logger()->info("temp ===> ", $temp);
+                $messages_to_push[] = $temp;
             }
 
             // 指定したLINE予約から対象のLINEチャンネルと紐づくLINEメンバーを取得
@@ -194,6 +200,10 @@ class ReserveController extends Controller
                     "line_account_id" => $line_reserve->line_account_id,
                 ])
                 ->get();
+
+            // LINEのマルチキャストで配信する際の配信先lineユーザー
+            $sub_list = $line_members->pluck("sub")
+                ->toArray();
 
             if ($line_members->count() === 0) {
                 throw new Exception("指定したLINE予約を受け取れるLINEメンバーがいません");
@@ -236,42 +246,48 @@ class ReserveController extends Controller
             }
 
             DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+            $json = [
+                "status" => false,
+                "code" => 400,
+                "response" => null,
+                "error" => $e->getMessage(),
+            ];
+            logger()->error($e);
+            return response()->json($json);
+        }
 
-            // DBへの問い合わせが管理用したら実際の送信処理を実行
-            foreach ($line_members as $index => $member) {
-                try {
-                    // --------------------------------------------------------------------
-                    // Laravel HTTPクライアントを使ってpushメッセージを送信する
-                    // ここで使用するAPIエンドポイントはLINEアカウント側のアクセストークンを利用する
-                    // ※LINEユーザーのアクセストークンは使わない
-                    // --------------------------------------------------------------------
-                    $messages_to_member = [
-                        "to" => $member->sub,
-                        "messages" => $messages_to_push,
-                    ];
-                    $response = Http::withHeaders([
-                        "Content-Type" => "application/json",
-                        "Authorization" => "Bearer {$member->line_account->messaging_channel_access_token}",
-                    ])
-                        ->post(Config("const.line_login.push"), $messages_to_member);
+        // DBへの問い合わせが管理用したら実際の送信処理を実行
+        try {
+            // --------------------------------------------------------------------
+            // Laravel HTTPクライアントを使ってpushメッセージを送信する
+            // ここで使用するAPIエンドポイントはLINEアカウント側のアクセストークンを利用する
+            // ※LINEユーザーのアクセストークンは使わない
+            // --------------------------------------------------------------------
+            $messages_to_member = [
+                "to" => $sub_list,
+                "messages" => $messages_to_push,
+            ];
+            $response = Http::withHeaders([
+                "Content-Type" => "application/json",
+                "Authorization" => "Bearer {$line_reserve->line_account->messaging_channel_access_token}",
+            ])
+                ->post(Config("const.line_login.multicast"), $messages_to_member);
 
-                    // 送信先メンバーをログに残す
-                    logger()->info($messages_to_member);
+            // 送信先メンバーをログに残す
+            logger()->info("messages_to_member ===> ", $messages_to_member);
 
-                    $response->throw();
+            $response->throw();
 
-                    // httpリクエストが成功したかどうかを検証
-                    if ($response->successful() !== true) {
-                        logger()->error("LINEメッセージの送信に失敗しました");
-                        throw new Exception();
-                    }
-                    // pushメッセージのレスポンスは空のjsonオブジェクトを返却する
-                    $response = $response->json();
-                    logger()->info($response);
-                } catch (Exception $e) {
-                    logger()->error($e);
-                }
+            // httpリクエストが成功したかどうかを検証
+            if ($response->successful() !== true) {
+                logger()->error("LINEメッセージの送信に失敗しました");
+                throw new Exception();
             }
+            // pushメッセージのレスポンスは空のjsonオブジェクトを返却する
+            $response = $response->json();
+            logger()->info($response);
             $line_reserve_log = LineReserve::with([
                 "line_messages",
                 "line_broadcasts",
@@ -280,15 +296,17 @@ class ReserveController extends Controller
 
             $json = [
                 "status" => true,
+                "code" => 200,
                 "response" => $line_reserve_log,
                 "error" => null,
             ];
-            logger()->info($json);
+            logger()->info("json ====> ", $json);
             return response()->json($json);
         } catch (Exception $e) {
-            DB::rollback();
+            logger()->error($e);
             $json = [
                 "status" => false,
+                "code" => 400,
                 "response" => null,
                 "error" => $e->getMessage(),
             ];

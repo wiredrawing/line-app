@@ -24,13 +24,13 @@ class AccountController extends Controller
     {
         try {
             $validated = $request->validated();
-            logger()->info($validated);
+            logger()->info("validated ====> ", $validated);
 
             $line_accounts = LineAccount::where([
                 "is_displayed" => Config("const.binary_type.on"),
-                "is_deleted" => Config("const.binary_type.off")
+                "is_deleted" => Config("const.binary_type.off"),
             ])
-            ->get();
+                ->get();
 
             $response = [
                 "status" => true,

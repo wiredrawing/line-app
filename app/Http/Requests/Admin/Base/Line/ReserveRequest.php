@@ -120,6 +120,7 @@ class ReserveRequest extends FormRequest
                     "messages.*.type" => [
                         "required",
                         "string",
+                        Rule::in(Config("const.line_message_types"))
                     ],
                     "messages.*.text" => [
                         "required",
@@ -175,7 +176,7 @@ class ReserveRequest extends FormRequest
             $this->all(),
         );
         // リクエスト内容のロギング
-        logger()->info($validation_data);
+        logger()->info("validation_data ===> ", $validation_data);
         return $validation_data;
     }
 }
