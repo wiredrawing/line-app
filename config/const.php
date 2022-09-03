@@ -22,7 +22,7 @@ return [
         "push" => "https://api.line.me/v2/bot/message/push",
         "multicast" => "https://api.line.me/v2/bot/message/multicast",
     ],
-    "line_message_types" => [
+    "line_message_type_list" => [
         "text",
         "sticker",
         "image",
@@ -33,51 +33,98 @@ return [
         "template",
     ],
 
-    "platform_types" => [
+    "platform_list" => [
         [
-            "id" => hash("sha256", "Play Station 4"),
+            "id" => 10,
             "value" => "Play Station 4",
         ],
         [
-            "id" => hash("sha256", "Play Station 5"),
+            "id" => 20,
             "value" => "Play Station 5",
         ],
         [
-            "id" => hash("sha256", "Nintendo Switch Lite"),
+            "id" => 30,
             "value" => "Nintendo Switch Lite",
         ],
         [
-            "id" => hash("sha256", "Nintendo Switch"),
+            "id" => 40,
             "value" => "Nintendo Switch",
         ],
         [
-            "id" => hash("sha256", "Xbox"),
+            "id" => 50,
             "value" => "Xbox",
         ],
         [
-            "id" => hash("sha256", "Xbox 360"),
+            "id" => 60,
             "value" => "Xbox 360",
         ],
         [
-            "id" => hash("sha256", "Xbox One"),
+            "id" => 70,
             "value" => "Xbox One",
         ],
         [
-            "id" => hash("sha256", "Xbox Series X/S"),
+            "id" => 80,
             "value" => "Xbox Series X/S",
         ],
         [
-            "id" => hash("sha256", "PC"),
+            "id" => 90,
             "value" => "PC",
         ],
         [
-            "id" => hash("sha256", "Mobile Phone"),
+            "id" => 100,
             "value" => "Mobile Phone",
         ],
     ],
+    "platform_code" => [
+        "PS4" => 10,
+        "PS5" => 20,
+        "S_LIST" => 30,
+        "S" => 40,
+        "XBOX" => 50,
+        "XBOX360" => 60,
+        "XBOX_ONE" => 70,
+        "XBOX_XS" => 80,
+        "PC" => 90,
+        "MOBILE" => 100,
+    ],
+
+    "genre_list" => [
+        [
+            "id" => 10,
+            "value" => "RPG",
+        ],
+        [
+            "id" => 20,
+            "value" => "STG",
+        ],
+        [
+            "id" => 30,
+            "value" => "ACTION",
+        ],
+        [
+            "id" => 40,
+            "value" => "FPS",
+        ],
+        [
+            "id" => 50,
+            "value" => "TPS",
+        ],
+        [
+            "id" => 60,
+            "value" => "SLG",
+        ],
+    ],
+    "genre_code" => [
+        "RPG" => 10,
+        "STG" => 20,
+        "ACT" => 30,
+        "FPS" => 40,
+        "TPS" => 50,
+        "SLG" => 60,
+    ],
 
     // プレイ頻度
-    "frequency_types" => [
+    "frequency_list" => [
         [
             "id" => 1,
             "value" => "週1回",

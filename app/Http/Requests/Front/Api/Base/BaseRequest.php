@@ -18,17 +18,6 @@ class BaseRequest extends FormRequest
         return true;
     }
 
-    // /**
-    //  * Get the validation rules that apply to the request.
-    //  *
-    //  * @return array
-    //  */
-    // public function rules()
-    // {
-    //     return [//
-    //     ];
-    // }
-
     /**
      * @return array|mixed
      */
@@ -58,6 +47,8 @@ class BaseRequest extends FormRequest
             "response" => null,
             "errors" => $errors,
         ];
-        throw new HttpResponseException(response()->json($response));
+        // 例外レスポンスを作成し返却する
+        $error_response = response()->json($response)->setStatusCode(400);
+        throw new HttpResponseException($error_response);
     }
 }
