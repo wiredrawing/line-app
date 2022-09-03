@@ -1,10 +1,8 @@
 <?php
 
-namespace Tests\Feature;
+namespace Api;
 
 use App\Models\Player;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class GameTitleTest extends TestCase
@@ -17,7 +15,7 @@ class GameTitleTest extends TestCase
     public function test_create_title()
     {
         $player = Player::factory()->create();
-        $api_token = $player->api_token;
+        $api_token = (isset($player->api_token)) ? $player->api_token : null;
         $post_data = [
             "title" => "ゲームタイトル game title".__FUNCTION__,
             // プラットフォームはPS4

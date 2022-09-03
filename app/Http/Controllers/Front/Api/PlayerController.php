@@ -110,7 +110,9 @@ class PlayerController extends Controller
         try {
             $player = Player::findOrFail($id);
             $validated_data = $request->validated();
-            print_r($validated_data);
+
+            // print_r($validated_data);
+
             logger()->info($validated_data);
             $result = $player->update($validated_data);
             if ($result !== true) {
