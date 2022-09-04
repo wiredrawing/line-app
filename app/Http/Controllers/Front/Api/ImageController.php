@@ -42,7 +42,7 @@ class ImageController extends Controller
                 "code" => 400,
                 "response" => $e->getMessage(),
             ];
-            return response()->json($json);
+            return response()->json($json)->setStatusCode(400);
         }
     }
 
@@ -96,12 +96,12 @@ class ImageController extends Controller
             }
             $json = [
                 "status" => true,
-                "code" => 200,
+                "code" => 201,
                 "response" => [
                     "image" => $image,
                 ],
             ];
-            return response()->json($json);
+            return response()->json($json)->setStatusCode(201);
         } catch (Throwable $e) {
             logger()->error($e);
             $json = [
@@ -109,7 +109,7 @@ class ImageController extends Controller
                 "code" => 400,
                 "response" => $e->getMessage(),
             ];
-            return response()->json($json);
+            return response()->json($json)->setStatusCode(400);
         }
     }
 
@@ -141,7 +141,7 @@ class ImageController extends Controller
                 "code" => 400,
                 "response" => $e->getMessage(),
             ];
-            return response()->json($json);
+            return response()->json($json)->setStatusCode(400);
         }
     }
 }

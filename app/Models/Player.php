@@ -12,14 +12,12 @@ class Player extends Model
     use HasFactory;
 
 
-    public $fillable = [
+    protected $fillable = [
         "line_member_id",
         "family_name",
         "middle_name",
         "given_name",
         "nickname",
-        // API経由ではメールアドレスは変更させない
-        "email",
         "description",
         "is_displayed",
         "is_deleted",
@@ -29,7 +27,12 @@ class Player extends Model
         "memo",
     ];
 
-    public $appends = [
+    protected $guarded = [
+        // API経由ではメールアドレスは変更させない
+        "email",
+    ];
+
+    protected $appends = [
         // 当該playerとマッチしている他player一覧を取得する
         "players_matching_with_you",
     ];

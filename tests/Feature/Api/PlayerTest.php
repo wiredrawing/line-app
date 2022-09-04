@@ -3,9 +3,11 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Player;
+use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Throwable;
 use const http\Client\Curl\POSTREDIR_ALL;
 
 class PlayerTest extends TestCase
@@ -14,10 +16,8 @@ class PlayerTest extends TestCase
 
     /**
      * 指定したplayerの情報のアップデート処理
+     *
      * @return void
-     */
-    /**
-     * @return int|void
      */
     public function test_update_player()
     {
@@ -26,7 +26,7 @@ class PlayerTest extends TestCase
             $player = Player::factory()->create();
 
             if ($player === null) {
-                throw new \Exception("Failed creating fake player info.");
+                throw new Exception("Failed creating fake player info.");
             }
 
             $post_data = [
@@ -43,10 +43,10 @@ class PlayerTest extends TestCase
             ];
             $response = $this->post("/front/api/player/update/{$player->id}", $post_data);
             $response->assertStatus(200);
-            return 1;
-        } catch (\Throwable $e) {
+            return;
+        } catch (Throwable $e) {
             var_dump($e->getMessage());
-            return -1;
+            return;
         }
     }
 }
