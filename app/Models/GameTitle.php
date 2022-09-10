@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class GameTitle extends Model
 {
@@ -21,4 +22,11 @@ class GameTitle extends Model
         "updated_by",
     ];
 
+    /**
+     * @return HasMany
+     */
+    public function playing_game_titles(): HasMany
+    {
+        return $this->hasMany(PlayingGameTitle::class, "game_title_id", "id");
+    }
 }
