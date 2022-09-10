@@ -21,7 +21,7 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
             GameTitleController::class, "create",
         ])->name("create");
 
-        Route::post("/update/{id}", [
+        Route::post("/update/{game_title_id}", [
             GameTitleController::class, "update",
         ])->name("update");
     });
@@ -29,25 +29,26 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
     // 各ユーザーがプレイしているゲームタイトルについて
     Route::group(["prefix" => "playingGameTitle", "as" => "playingGameTitle."], function () {
 
+        // 指定したユーザーに新たなプレイ中ゲームタイトルを追加する
+        Route::post("/create", [
+            PlayingGameTitleController::class, "create",
+        ])->name("create");
+
+        // 指定したユーザーの指定したプレイ中ゲームタイトルの情報を編集する
+        Route::post("/update/{playing_game_title_id}", [
+            PlayingGameTitleController::class, "update",
+        ])->name("update");
+
+        // 指定したプレイ中のゲームタイトルの削除
+        Route::post("/delete/{playing_game_title_id}", [
+            PlayingGameTitleController::class, "delete",
+        ])->name("delete");
+
         // 指定したユーザーのプレイ中ゲームタイトル一覧を取得する
         Route::get("/{player_id}", [
             PlayingGameTitleController::class, "detail",
         ])->name("detail");
 
-        // 指定したユーザーに新たなプレイ中ゲームタイトルを追加する
-        Route::post("/create/{player_id}", [
-            PlayingGameTitleController::class, "create",
-        ])->name("create");
-
-        // 指定したユーザーの指定したプレイ中ゲームタイトルの情報を編集する
-        Route::post("/update/{id}", [
-            PlayingGameTitleController::class, "update",
-        ])->name("update");
-
-        // 指定したプレイ中のゲームタイトルの削除
-        Route::post("/delete/{id}", [
-            PlayingGameTitleController::class, "delete",
-        ])->name("delete");
     });
 
     // ゲームプレイヤーに関するAPI

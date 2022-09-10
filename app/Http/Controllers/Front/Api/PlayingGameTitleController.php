@@ -22,36 +22,36 @@ class PlayingGameTitleController extends Controller
     {
         try {
             $validated_data = $request->validated();
-            logger()->info($validated_data);
+            logger()->info(print_r($validated_data, true));
             $playing_game_title = PlayingGameTitle::create($validated_data);
             $json = [
                 "status" => true,
-                "code" => 200,
+                "code" => 201,
                 "response" => [
                     "playing_game_title" => $playing_game_title,
                 ],
             ];
-            return response()->json($json);
+            return response()->json($json, 201);
         } catch (Throwable $e) {
             $json = [
                 "status" => false,
                 "code" => 400,
                 "response" => $e->getMessage(),
             ];
-            return response()->json($json);
+            return response()->json($json, 400);
         }
     }
 
     /**
      * @param PlayingGameTitleRequest $request
-     * @param int $id
+     * @param int $playing_game_title_id
      * @return JsonResponse
      */
-    public function update(PlayingGameTitleRequest $request, int $id): JsonResponse
+    public function update(PlayingGameTitleRequest $request, int $playing_game_title_id): JsonResponse
     {
         try {
             $validated_data = $request->validated();
-            $playing_game_title = PlayingGameTitle::findOrFail($id);
+            $playing_game_title = PlayingGameTitle::findOrFail($playing_game_title_id);
 
             $result = $playing_game_title->update($validated_data);
             if ($result !== true) {
@@ -78,15 +78,15 @@ class PlayingGameTitleController extends Controller
     /**
      * 指定したプレイ中のゲームタイトルを削除する
      * @param PlayerImageRequest $request
-     * @param int $id
+     * @param int $playing_game_title_id
      * @return JsonResponse
      */
-    public function delete(PlayerImageRequest $request, int $id): JsonResponse
+    public function delete(PlayerImageRequest $request, int $playing_game_title_id): JsonResponse
     {
         try {
             $validated_data = $request->validated();
-            logger()->info($validated_data);
-            $playing_game_title = PlayingGameTitle::findOrFail($id);
+            logger()->info(print_r($validated_data, true));
+            $playing_game_title = PlayingGameTitle::findOrFail($playing_game_title_id);
             $result = $playing_game_title->delete();
             $json = [
                 "status" => true,

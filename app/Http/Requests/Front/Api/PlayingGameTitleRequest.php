@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Front\Api;
 
+use App\Http\Requests\Front\Api\Base\BaseRequest;
 use App\Models\Player;
 use App\Models\PlayingGameTitle;
 use Illuminate\Contracts\Validation\Validator;
@@ -10,18 +11,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class PlayingGameTitleRequest extends FormRequest
+class PlayingGameTitleRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -70,7 +61,7 @@ class PlayingGameTitleRequest extends FormRequest
             } else if ($route_name === "front.api.top.playingGameTitle.update") {
                 $rules = [
                     // playing_game_titlesテーブルのプライマリキー
-                    "id" => [
+                    "playing_game_title_id" => [
                         "required",
                         "integer",
                         Rule::exists("playing_game_titles", "id"),
@@ -96,7 +87,7 @@ class PlayingGameTitleRequest extends FormRequest
                 ];
             } else if ($route_name === "front.api.top.playingGameTitle.delete") {
                 $rules = [
-                    "id" => [
+                    "player_id" => [
                         "required",
                         "integer",
                         Rule::exists("playing_game_titles", "id")

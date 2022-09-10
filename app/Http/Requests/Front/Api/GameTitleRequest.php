@@ -66,7 +66,7 @@ class GameTitleRequest extends BaseRequest
                 } else if ($route_name === "front.api.top.gameTitle.update") {
                     // 既存の登録ずみゲームタイトルの編集処理
                     $rules = [
-                        "id" => [
+                        "game_title_id" => [
                             "required",
                             "integer",
                         ],

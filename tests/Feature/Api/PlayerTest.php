@@ -2,16 +2,12 @@
 
 namespace Tests\Feature\Api;
 
-use App\Libraries\RandomToken;
 use App\Models\LineAccount;
 use App\Models\LineMember;
 use App\Models\Player;
-use Exception;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Throwable;
 
 class PlayerTest extends TestCase
 {
@@ -23,7 +19,7 @@ class PlayerTest extends TestCase
      * 指定したプレイヤーの情報を取得する
      * @return void
      */
-    public function test_fetch_player_info()
+    public function test_fetch_player_detail()
     {
         $line_account = LineAccount::factory()
             ->count(1)
@@ -65,6 +61,8 @@ class PlayerTest extends TestCase
         $response->assertSee(200);
         $response->assertExactJson($expected_json);
         $response->assertJson($expected_json);
+        $response->assertSee(json_encode($expected_json), false);
+        $response->assertSeeText(json_encode($expected_json), false);
     }
 
     /**

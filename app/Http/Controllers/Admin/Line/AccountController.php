@@ -30,7 +30,7 @@ class AccountController extends Controller
             }
             // ログイン中の管理者情報を取得
             $administrator = Auth::user();
-            print_r($administrator->toArray());
+            // print_r($administrator->toArray());
             logger()->info($administrator);
 
             $line_accounts = LineAccount::all();

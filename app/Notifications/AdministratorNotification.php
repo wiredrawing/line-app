@@ -22,7 +22,7 @@ class AdministratorNotification extends Notification
      */
     public function __construct(Administrator $administrator, string $token)
     {
-        print_r($administrator->toArray());
+        // print_r($administrator->toArray());
         $this->administrator = $administrator;
         $this->token = $token;
     }

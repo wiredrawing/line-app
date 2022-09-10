@@ -23,7 +23,7 @@ class GameTitleSeeder extends Seeder
             "created_by" => null,
             "updated_by" => null,
         ]);
-        print_r($game_title->toArray());
+        // print_r($game_title->toArray());
 
         $game_title = GameTitle::create([
             "title" => "Apex",
@@ -33,6 +33,6 @@ class GameTitleSeeder extends Seeder
             "created_by" => null,
             "updated_by" => null,
         ]);
-        print_r($game_title->toArray());
+        // print_r($game_title->toArray());
     }
 }
