@@ -33,6 +33,12 @@ class CreatePlayersTable extends Migration
             // なんかメモ用に
             $table->text("memo")->nullable();
             $table->timestamps();
+
+
+            // 外部キー誓約
+            $table->foreign("line_member_id")->references("id")->on("line_members");
+
+            // ユニーク誓約
             $table->unique("api_token", "player_api_token");
         });
     }

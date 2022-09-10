@@ -20,6 +20,11 @@ class CreatePlayerImagesTable extends Migration
             $table->bigInteger("player_id");
             $table->tinyInteger("is_displayed")->default(Config("const.binary_type.on"));
             $table->timestamps();
+
+            // 外部キー誓約
+            $table->foreign("player_id")->references("id")->on("players");
+            $table->foreign("image_id")->references("id")->on("images");
+            // ユニーク誓約
             $table->unique([
                 "image_id",
                 "player_id",

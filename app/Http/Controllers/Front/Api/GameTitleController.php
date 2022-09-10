@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Front\Api\GameTitleRequest;
 use App\Models\GameTitle;
+use App\Models\Player;
 use Illuminate\Http\JsonResponse;
 
 class GameTitleController extends Controller
@@ -31,22 +32,22 @@ class GameTitleController extends Controller
         try {
             $validated_data = $request->validated();
             $game_title = GameTitle::create($validated_data);
+            $game_title = GameTitle::findOrFail($game_title->id);
             $json = [
                 "status" => true,
-                //
                 "code" => 201,
                 "response" => [
                     "game_title" => $game_title,
                 ]
             ];
-            return response()->json($json)->setStatusCode(201);
+            return response()->json($json, 201);
         } catch (\Throwable $e) {
             $json = [
                 "status" => false,
                 "code" => 400,
                 "response" => $e->getMessage(),
             ];
-            return response()->setStatusCode(400)->json($json);
+            return response()->json($json, 400);
         }
     }
 

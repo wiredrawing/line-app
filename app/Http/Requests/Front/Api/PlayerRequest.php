@@ -13,7 +13,7 @@ class PlayerRequest extends BaseRequest
      *
      * @return bool
      */
-    public function authorize() :bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -27,81 +27,87 @@ class PlayerRequest extends BaseRequest
     {
         $rules = [];
         $route_name = Route::currentRouteName();
-        if ($this->isMethod("get")) {
-            if ($route_name === "front.api.top.player.detail") {
-                // 指定したplayer_idかつプレイヤーが公開中のプレイヤー情報を取得する
-                $rules = [
-                    "id" => [
-                        "required",
-                        "integer",
-                        function ($attribute, $value, $fail) {
-                            logger()->info($attribute);
-                            $player = Player::find($value);
-                            if ($player === null) {
-                                return $fail(":attributeが不正なID値です.");
-                            }
-                            return true;
-                        },
-                    ],
-                ];
-            } else if ($route_name === "front.api.top.player.search") {
-                $rules = [
-                    "keyword" => [
-                        "nullable",
-                        "string",
-                    ],
-                ];
-            }
-        } else if ($this->isMethod("post")) {
-            if ($route_name === "front.api.top.player.update") {
-                $rules = [
-                    "id" => [
-                        "required",
-                        "integer",
-                        function ($attribute, $value, $fail) {
-                            logger()->info($attribute);
-                            $player = Player::find($value);
-                            if ($player === null) {
-                                return $fail(":attributeが不正なID値です.");
-                            }
-                            return true;
-                        },
-                    ],
-                    "family_name" => [
-                        "nullable",
-                        "string",
-                    ],
-                    "middle_name" => [
-                        "nullable",
-                        "string",
-                    ],
-                    "given_name" => [
-                        "nullable",
-                        "string",
-                    ],
-                    "nickname" => [
-                        "required",
-                        "string",
-                        "between:5,512"
-                    ],
-                    "gender_id" => [
-                        "nullable",
-                        "integer",
-                    ],
-                    "is_published" => [
-                        "nullable",
-                        "integer",
-                    ],
-                    "description" => [
-                        "nullable",
-                        "string",
-                    ],
-                    "memo" => [
-                        "nullable",
-                        "string",
-                    ]
-                ];
-            }
+        switch (strtoupper($this->method())) {
+            case "GET":
+                if ($route_name === "front.api.top.player.detail") {
+                    // 指定したplayer_idかつプレイヤーが公開中のプレイヤー情報を取得する
+                    $rules = [
+                        "player_id" => [
+                            "required",
+                            "integer",
+                            function ($attribute, $value, $fail) {
+                                logger()->info($attribute);
+                                $player = Player::find($value);
+                                if ($player === null) {
+                                    return $fail(":attributeが不正なID値です.");
+                                }
+                                return true;
+                            },
+                        ],
+                    ];
+                } else if ($route_name === "front.api.top.player.search") {
+                    $rules = [
+                        "keyword" => [
+                            "nullable",
+                            "string",
+                        ],
+                    ];
+                }
+                break;
+            case "POST":
+                if ($route_name === "front.api.top.player.update") {
+                    $rules = [
+                        "player_id" => [
+                            "required",
+                            "integer",
+                            function ($attribute, $value, $fail) {
+                                logger()->info($attribute);
+                                $player = Player::find($value);
+                                if ($player === null) {
+                                    return $fail(":attributeが不正なID値です.");
+                                }
+                                return true;
+                            },
+                        ],
+                        "family_name" => [
+                            "nullable",
+                            "string",
+                        ],
+                        "middle_name" => [
+                            "nullable",
+                            "string",
+                        ],
+                        "given_name" => [
+                            "nullable",
+                            "string",
+                        ],
+                        "nickname" => [
+                            "required",
+                            "string",
+                            "between:5,512",
+                        ],
+                        "gender_id" => [
+                            "nullable",
+                            "integer",
+                        ],
+                        "is_published" => [
+                            "nullable",
+                            "integer",
+                        ],
+                        "description" => [
+                            "nullable",
+                            "string",
+                        ],
+                        "memo" => [
+                            "nullable",
+                            "string",
+                        ],
+                    ];
+                }
+                break;
+            default:
+                break;
+
         }
 
         // トークンはどのリクエストでも必須とする
@@ -109,16 +115,18 @@ class PlayerRequest extends BaseRequest
             "required",
             "string",
             "min:1",
-            function ($attribute , $value, $fail) {
+            function ($attribute, $value, $fail) {
                 logger()->info($attribute);
                 $player = Player::where([
                     "api_token" => $value,
-                ])->get()->first();
+                ])
+                    ->get()
+                    ->first();
                 if ($player === null) {
                     return $fail(":attributeが不正なトークンです");
                 }
                 return true;
-            }
+            },
         ];
         return $rules;
     }

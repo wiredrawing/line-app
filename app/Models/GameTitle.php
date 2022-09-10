@@ -15,6 +15,8 @@ class GameTitle extends Model
         "platform_id",
         "description",
         "genre_id",
+        "is_displayed",
+        "is_deleted",
         "created_by",
         "updated_by",
     ];

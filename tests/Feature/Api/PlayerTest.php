@@ -2,17 +2,70 @@
 
 namespace Tests\Feature\Api;
 
+use App\Libraries\RandomToken;
+use App\Models\LineAccount;
+use App\Models\LineMember;
 use App\Models\Player;
 use Exception;
+use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Throwable;
-use const http\Client\Curl\POSTREDIR_ALL;
 
 class PlayerTest extends TestCase
 {
 
+    use RefreshDatabase;
+
+
+    /**
+     * 指定したプレイヤーの情報を取得する
+     * @return void
+     */
+    public function test_fetch_player_info()
+    {
+        $line_account = LineAccount::factory()
+            ->count(1)
+            ->has(LineMember::factory()
+                ->count(1)
+                ->has(Player::factory()
+                    ->count(1), "player",), "line_members",)
+            ->create();
+
+        $line_account = LineAccount::with([
+            "line_members",
+            "line_members.player",
+        ])
+            ->get()
+            ->first();
+
+        // print_r($line_account->toArray());
+
+
+        $player = Player::with([
+            "line_member",
+            "line_member.line_account",
+        ])
+            ->get()
+            ->first();
+
+        $response = $this->get(route("front.api.top.player.detail", [
+            "player_id" => $line_account->first()->line_members->first()->player->id,
+            "api_token" => $line_account->first()->line_members->first()->player->api_token,
+        ]));
+
+        $expected_json = [
+            "status" => true,
+            "code" => 200,
+            "response" => [
+                "player" => $player->toArray(),
+            ],
+        ];
+        $response->assertSee(200);
+        $response->assertExactJson($expected_json);
+        $response->assertJson($expected_json);
+    }
 
     /**
      * 指定したplayerの情報のアップデート処理
@@ -21,32 +74,63 @@ class PlayerTest extends TestCase
      */
     public function test_update_player()
     {
-        try {
-            // 新規player情報の登録
-            $player = Player::factory()->create();
+        // 新規player情報の登録
+        $line_account = LineAccount::factory()
+            ->count(1)
+            ->has(LineMember::factory()
+                ->count(1)
+                ->has(Player::factory()
+                    ->count(1), "player"), "line_members")
+            ->create();
 
-            if ($player === null) {
-                throw new Exception("Failed creating fake player info.");
-            }
+        // logger()->info(print_r($line_account->toArray(), true));
 
-            $post_data = [
-                "id" => $player->id,
-                "family_name" => "プレイヤー情報アップデート family_name",
-                "middle_name" => "プレイヤー情報アップデート middle_name",
-                "given_name" => "プレイヤー情報アップデート given_name",
-                "nickname" => "プレイヤー情報アップデート nickname",
-                "gender_id" => 1,
-                "is_published" => 1,
-                "description" => "プレイヤー情報をアップデートします description",
-                "memo" => "プレイヤー情報をアップデート memo",
-                "api_token" => $player->api_token,
-            ];
-            $response = $this->post("/front/api/player/update/{$player->id}", $post_data);
-            $response->assertStatus(200);
-            return;
-        } catch (Throwable $e) {
-            var_dump($e->getMessage());
-            return;
-        }
+        $line_account = LineAccount::with([
+            "line_members",
+            "line_members.player",
+        ])
+            ->get()
+            ->first();
+
+        // logger()->info(print_r($line_account->toArray(), true));
+
+        $player = Player::get()->first();
+
+        $response = $this->post(route("front.api.top.player.update", [
+            "player_id" => $player->id,
+        ]), [
+            "id" => $player->id,
+            "family_name" => Factory::create()->text(512),
+            "middle_name" => Factory::create()->text(512),
+            "given_name" => Factory::create()->text(512),
+            "nickname" => Factory::create()->text(512),
+            "gender_id" => 100,
+            "is_published" => 100,
+            "description" => Factory::create()->text(512),
+            "memo" => Factory::create()->text(512),
+            "api_token" => $player->api_token,
+        ]);
+
+        $player = Player::with([
+            "line_member",
+            "line_member.line_account",
+        ])
+            ->get()
+            ->first();
+        // print_r($player->toArray());
+
+        $expected_json = [
+            "status" => true,
+            "code" => 200,
+            "response" => [
+                "player" => $player->toArray(),
+            ]
+        ];
+        // print_r($expected_json);
+        $response->assertStatus(200);
+        $response->assertJson($expected_json);
+        $response->assertExactJson($expected_json);
+        $response->assertSeeText(json_encode($expected_json), false);
+        $response->assertSee(json_encode($expected_json), false);
     }
 }

@@ -25,7 +25,9 @@ class CreateLineMembersTable extends Migration
             $table->string("picture");
             $table->string("name");
             // 本アプリケーション上の表示フラグ
-            $table->tinyInteger("is_displayed")->default(1);
+            $table->tinyInteger("is_displayed")->default(Config("const.binary_type.on"));
+            // 本アプリケーション上の削除フラグ
+            $table->tinyInteger("is_deleted")->default(Config("const.binary_type.off"));
             // LINEプラットフォームが提供するLINEユーザーのID
             $table->string("sub");
             $table->string("aud");
@@ -36,6 +38,10 @@ class CreateLineMembersTable extends Migration
             // ---------------------------------------------------------
             $table->string("api_token")->nullable();
             $table->timestamps();
+
+            // 外部キー誓約
+            $table->foreign("line_account_id")->references("id")->on("line_accounts");
+
 
             $table->unique("api_token", "line_member_api_token");
 

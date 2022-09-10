@@ -26,6 +26,11 @@ class CreatePlayingGameTitlesTable extends Migration
             $table->text("memo")->nullable();
             $table->timestamps();
 
+            // 外部キー誓約
+            $table->foreign("player_id")->references("id")->on("players");
+            $table->foreign("game_title_id")->references("id")->on("game_titles");
+
+            // ユニークキー誓約
             $table->unique([
                 "player_id",
                 "game_title_id",

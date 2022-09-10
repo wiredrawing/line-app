@@ -58,11 +58,11 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
             PlayerController::class, "search",
         ])->name("search");
 
-        Route::get("/detail/{id}", [
+        Route::get("/detail/{player_id}", [
             PlayerController::class, "detail",
         ])->name("detail");
 
-        Route::post("/update/{id}", [
+        Route::post("/update/{player_id}", [
             PlayerController::class, "update",
         ])->name("update");
 
