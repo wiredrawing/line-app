@@ -110,9 +110,9 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
         ])->name("create");
 
         // 指定したplayerのフォローを外す
-        Route::post("/unfollow", [
-            FollowerController::class, "unfollow",
-        ])->name("unfollow");
+        Route::post("/delete", [
+            FollowerController::class, "delete",
+        ])->name("delete");
     });
 
 

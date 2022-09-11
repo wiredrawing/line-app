@@ -96,20 +96,37 @@ class FollowerController extends Controller
 
 
     /**
+     * 指定したプレイヤーの組み合わせのフォロー関係を削除する
+     *
      * @param FollowerRequest $request
      * @return JsonResponse
      */
-    public function unfollow(FollowerRequest $request): JsonResponse
+    public function delete(FollowerRequest $request): JsonResponse
     {
         try {
             $validated_data = $request->validated();
             logger()->info(print_r($validated_data, true));
-            $follower = Follower::where($validated_data)->destroy();
+            $follower = Follower::where([
+                "from_player_id" => $validated_data["from_player_id"],
+                "to_player_id" => $validated_data["to_player_id"],
+            ]);
+            if ($follower->count() !== 1) {
+                throw new Exception("システム上でDBの整合性不正が起きています");
+            }
+            $deleted_follower_id = $follower->get()->first()->id;
+            // マッチしたフォローレコードを削除する
+            $deleted = Follower::destroy($deleted_follower_id);
+            if ($deleted !== 1) {
+                // 削除されるレコード件数は設計上は必ず1件のみ
+                throw new \Exception("レコードの削除に失敗しました");
+            }
             $json = [
-                "statsu" => true,
+                "status" => true,
                 "code" => 200,
                 "response" => [
-                    "follower" => $follower,
+                    "follower" => [
+                        "id" => $deleted_follower_id,
+                    ],
                 ],
             ];
             return response()->json($json);
@@ -119,7 +136,7 @@ class FollowerController extends Controller
                 "code" => 400,
                 "response" => $e->getMessage(),
             ];
-            return response()->json($json);
+            return response()->json($json, 400);
         }
     }
 }

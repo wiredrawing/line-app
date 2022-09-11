@@ -95,7 +95,7 @@ class FollowerRequest extends BaseRequest
                 ];
                 if ($route_name === "front.api.top.follower.create") {
                     // 個別ルールを定義
-                } else if ($route_name === "front.api.top.follower.unfollow") {
+                } else if ($route_name === "front.api.top.follower.delete") {
                     // 個別ルールを定義
                 }
                 break;
