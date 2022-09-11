@@ -59,7 +59,7 @@ class Player extends Model
      * 当該のplayerがフォロー中のプレイヤーを取得する
      * @return HasMany
      */
-    public function following_players(): HasMany
+    public function players_you_followed(): HasMany
     {
         return $this->hasMany(Follower::class, "from_player_id", "id");
     }

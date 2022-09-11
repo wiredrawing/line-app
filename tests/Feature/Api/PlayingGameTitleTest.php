@@ -53,15 +53,32 @@ class PlayingGameTitleTest extends TestCase
             "skill_level" => 1,
             // プレイの頻度(週何回?)
             "frequency" => 3,
-            "memo" => Factory::create()->realText(100)
+            "memo" => Factory::create()
+                ->realText(100),
         ]);
 
+        $latest_playing_game_title = PlayingGameTitle::where([
+            "player_id" => $line_account->line_members->first()->player->id,
+        ])
+            ->get()
+            ->first();
+        // 新規作成ずみのレコードをjsonとして返却する
+        $expected_json = [
+            "status" => true,
+            "code" => 201,
+            "response" => [
+                "playing_game_title" => $latest_playing_game_title->toArray(),
+            ],
+        ];
         $response->assertStatus(201);
+        $response->assertExactJson($expected_json);
+        $response->assertJson($expected_json);
     }
 
 
     /**
      * 指定したプレイヤーが現在プレイ中のゲームタイトル一覧を取得する
+     *
      * @return void
      */
     public function test_fetch_game_titles_per_player()
@@ -91,22 +108,31 @@ class PlayingGameTitleTest extends TestCase
                 }), "playing_game_titles")
             ->create();
 
-        $game_titles = GameTitle::with([
-            "playing_game_titles",
+        $playing_game_titles = PlayingGameTitle::with([
+            "game_title",
         ])
+            ->where([
+                "player_id" => $player->id,
+            ])
+            ->whereHas("game_title")
             ->get();
 
         $response = $this->get(route("front.api.top.playingGameTitle.detail", [
             "player_id" => $player->id,
+            "api_token" => $player->api_token,
         ]));
 
         $expected_data = [
             "status" => true,
             "code" => 200,
             "response" => [
-                "playing_game_titles" => null,
-            ]
+                "playing_game_titles" => $playing_game_titles->toArray(),
+            ],
         ];
+        $response->assertStatus(200);
         $response->assertExactJson($expected_data);
+        $response->assertJson($expected_data);
+        $response->assertSee(json_encode($expected_data), false);
+        $response->assertSeeText(json_encode($expected_data), false);
     }
 }

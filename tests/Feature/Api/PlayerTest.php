@@ -21,6 +21,9 @@ class PlayerTest extends TestCase
      */
     public function test_fetch_player_detail()
     {
+        // -----------------------------------------------------
+        // ダミーデータを作成
+        // -----------------------------------------------------
         $line_account = LineAccount::factory()
             ->count(1)
             ->has(LineMember::factory()
@@ -28,16 +31,6 @@ class PlayerTest extends TestCase
                 ->has(Player::factory()
                     ->count(1), "player",), "line_members",)
             ->create();
-
-        $line_account = LineAccount::with([
-            "line_members",
-            "line_members.player",
-        ])
-            ->get()
-            ->first();
-
-        // print_r($line_account->toArray());
-
 
         $player = Player::with([
             "line_member",
@@ -47,8 +40,8 @@ class PlayerTest extends TestCase
             ->first();
 
         $response = $this->get(route("front.api.top.player.detail", [
-            "player_id" => $line_account->first()->line_members->first()->player->id,
-            "api_token" => $line_account->first()->line_members->first()->player->api_token,
+            "player_id" => $player->id,
+            "api_token" => $player->api_token,
         ]));
 
         $expected_json = [
@@ -72,7 +65,9 @@ class PlayerTest extends TestCase
      */
     public function test_update_player()
     {
-        // 新規player情報の登録
+        // -------------------------------------------------
+        // 新規player情報の登録(ダミーデータ)
+        // -------------------------------------------------
         $line_account = LineAccount::factory()
             ->count(1)
             ->has(LineMember::factory()
@@ -81,16 +76,6 @@ class PlayerTest extends TestCase
                     ->count(1), "player"), "line_members")
             ->create();
 
-        // logger()->info(print_r($line_account->toArray(), true));
-
-        $line_account = LineAccount::with([
-            "line_members",
-            "line_members.player",
-        ])
-            ->get()
-            ->first();
-
-        // logger()->info(print_r($line_account->toArray(), true));
 
         $player = Player::get()->first();
 
@@ -113,9 +98,7 @@ class PlayerTest extends TestCase
             "line_member",
             "line_member.line_account",
         ])
-            ->get()
-            ->first();
-        // print_r($player->toArray());
+            ->findOrFail($player->id);
 
         $expected_json = [
             "status" => true,

@@ -70,20 +70,21 @@ class FollowerController extends Controller
             $validated_data = $request->validated();
 
             $follower = Follower::create($validated_data);
-
             if ($follower === null) {
                 throw new Exception("プレイヤーのフォローに失敗しました");
             }
-
+            $follower = Follower::findOrFail($follower->id);
             $json = [
-                "statsu" => true,
-                "code" => 200,
+                "status" => true,
+                "code" => 201,
                 "response" => [
                     "follower" => $follower,
                 ],
             ];
-            return response()->json($json);
+            logger()->info(print_r($json, true));
+            return response()->json($json, 201);
         } catch (Throwable $e) {
+            logger()->error($e);
             $json = [
                 "statsu" => false,
                 "code" => 400,
@@ -102,6 +103,7 @@ class FollowerController extends Controller
     {
         try {
             $validated_data = $request->validated();
+            logger()->info(print_r($validated_data, true));
             $follower = Follower::where($validated_data)->destroy();
             $json = [
                 "statsu" => true,

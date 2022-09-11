@@ -24,15 +24,18 @@ class PlayingGameTitleController extends Controller
             $validated_data = $request->validated();
             logger()->info(print_r($validated_data, true));
             $playing_game_title = PlayingGameTitle::create($validated_data);
+
+            $latest_playing_game_title = PlayingGameTitle::findOrFail($playing_game_title->id);
             $json = [
                 "status" => true,
                 "code" => 201,
                 "response" => [
-                    "playing_game_title" => $playing_game_title,
+                    "playing_game_title" => $latest_playing_game_title,
                 ],
             ];
             return response()->json($json, 201);
         } catch (Throwable $e) {
+            logger()->error($e);
             $json = [
                 "status" => false,
                 "code" => 400,
@@ -77,11 +80,11 @@ class PlayingGameTitleController extends Controller
 
     /**
      * 指定したプレイ中のゲームタイトルを削除する
-     * @param PlayerImageRequest $request
+     * @param PlayingGameTitleRequest $request
      * @param int $playing_game_title_id
      * @return JsonResponse
      */
-    public function delete(PlayerImageRequest $request, int $playing_game_title_id): JsonResponse
+    public function delete(PlayingGameTitleRequest $request, int $playing_game_title_id): JsonResponse
     {
         try {
             $validated_data = $request->validated();
@@ -95,12 +98,51 @@ class PlayingGameTitleController extends Controller
             ];
             return response()->json($json);
         } catch (\Throwable $e) {
+            logger()->error($e);
             $json = [
                 "status" => false,
                 "code" => 400,
                 "response" => $e->getMessage(),
             ];
             return response()->json($json);
+        }
+    }
+
+    /**
+     * @param PlayingGameTitleRequest $request
+     * @param int $player_id
+     * @return JsonResponse
+     */
+    public function detail(PlayingGameTitleRequest $request, int $player_id): JsonResponse
+    {
+        try {
+            $validated_data = $request->validated();
+            logger()->info(print_r($validated_data, true));
+
+            $playing_game_titles = PlayingGameTitle::with([
+                "game_title",
+            ])
+                ->where([
+                    "player_id" => $validated_data["player_id"],
+                ])
+                ->get();
+            logger()->info(print_r($playing_game_titles->toArray(), true));
+            $json = [
+                "status" => true,
+                "code" => 200,
+                "response" => [
+                    "playing_game_titles" => $playing_game_titles,
+                ]
+            ];
+            return response()->json($json, 200);
+        } catch (\Throwable $e) {
+            logger()->error($e);
+            $json = [
+                "status" => false,
+                "code" => 400,
+                "response" => $e->getMessage(),
+            ];
+            return response()->json($json, 400);
         }
     }
 }

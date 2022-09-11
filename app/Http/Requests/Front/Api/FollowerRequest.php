@@ -58,12 +58,12 @@ class FollowerRequest extends BaseRequest
                 } else if ($route_name === "front.api.top.follower.following") {
                     // 当該ルーティング個別のルールを定義
                     $rules = [
-                        "from_member_id",
+                        "from_player_id",
                     ];
                 } else if ($route_name === "front.api.top.follower.matched") {
                     // 当該ルーティング個別のルールを定義
                     $rules = [
-                        "from_member_id",
+                        "from_player_id",
                     ];
                 }
                 break;
@@ -84,7 +84,7 @@ class FollowerRequest extends BaseRequest
                         function ($attribute, $value, $fail) {
                             logger()->info($attribute);
                             // 当該のapi_tokenキーで正しいplayer_idが指定されているかどうか
-                            $player_id = $this->route()->parameter("from_player_id");
+                            $player_id = $this->input("from_player_id");
                             $player = Player::where(["api_token" => $value])->find($player_id);
                             if ($player === null) {
                                 return $fail("指定したAPIトークンとプレイヤーIDがマッチしません");
