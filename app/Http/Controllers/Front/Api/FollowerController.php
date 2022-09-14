@@ -25,7 +25,13 @@ class FollowerController extends Controller
         try {
 
         } catch (Throwable $e) {
-
+            logger()->error($e);
+            $json = [
+                "statsu" => false,
+                "code" => 400,
+                "response" => $e->getMessage(),
+            ];
+            return response()->json($json, 400);
         }
     }
 
@@ -40,7 +46,13 @@ class FollowerController extends Controller
         try {
 
         } catch (Throwable $e) {
-
+            logger()->error($e);
+            $json = [
+                "statsu" => false,
+                "code" => 400,
+                "response" => $e->getMessage(),
+            ];
+            return response()->json($json, 400);
         }
     }
 
@@ -48,14 +60,36 @@ class FollowerController extends Controller
     /**
      * 指定したplayerがフォロー中のplayer一覧を返却する
      *
-     * @return void
+     * @param FollowerRequest $request
+     * @param int $from_player_id
+     * @return JsonResponse
      */
-    public function folllowing(FollowerRequest $request, Integer $player_id)
+    public function following(FollowerRequest $request, int $from_player_id): JsonResponse
     {
         try {
+            $validated_data = $request->validated();
+            logger()->info(print_r($validated_data, true));
+            $follwers = Follower::where([
+                "from_player_id" => $validated_data["from_player_id"],
+            ])
+                ->get();
 
+            $json = [
+                "status" => true,
+                "code" => 200,
+                "response" => [
+                    "followers" => $follwers,
+                ],
+            ];
+            return response()->json($json, 200);
         } catch (Throwable $e) {
-
+            logger()->error($e);
+            $json = [
+                "statsu" => false,
+                "code" => 400,
+                "response" => $e->getMessage(),
+            ];
+            return response()->json($json, 400);
         }
     }
 
@@ -118,7 +152,7 @@ class FollowerController extends Controller
             $deleted = Follower::destroy($deleted_follower_id);
             if ($deleted !== 1) {
                 // 削除されるレコード件数は設計上は必ず1件のみ
-                throw new \Exception("レコードの削除に失敗しました");
+                throw new Exception("レコードの削除に失敗しました");
             }
             $json = [
                 "status" => true,
@@ -131,6 +165,7 @@ class FollowerController extends Controller
             ];
             return response()->json($json);
         } catch (Throwable $e) {
+            logger()->error($e);
             $json = [
                 "statsu" => false,
                 "code" => 400,

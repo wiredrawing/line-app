@@ -89,18 +89,25 @@ Route::group(["prefix" => "/", "as" => "top."], function () {
     // プレイヤーのフォロワー関係
     Route::group(["prefix" => "follower", "as" => "follower."], function () {
 
+        // -----------------------------------------------------------
+        // GETリクエスト
+        // -----------------------------------------------------------
         // 指定したプレイヤーIDがフォローしている一覧を取得する
-        Route::get("/following/{player_id}", [
-            FollowerController::class, "list",
+        Route::get("/following/{from_player_id}", [
+            FollowerController::class, "following",
         ])->name("following");
 
         // 指定したユーザーをフォローしているプレイヤー
-        Route::get("/followed/{player_id}", [
+        Route::get("/followed/{from_player_id}", [
             FollowerController::class, "followed",
         ])->name("followed");
 
+
+        // -----------------------------------------------------------
+        // POSTリクエスト
+        // -----------------------------------------------------------
         // 指定したplayerがすでにマッチング済みのプレイヤー一覧を取得する
-        Route::get("/matching/{player_id}", [
+        Route::get("/matching/{from_player_id}", [
             FollowerController::class, "matching",
         ])->name("matching");
 
