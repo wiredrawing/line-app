@@ -19,16 +19,16 @@ class BaseRequest extends FormRequest
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
-    public function validationData()
+    public function validationData(): array
     {
         $temp = array_merge(
+            $this->all(),
             $this->input(),
             $this->route()->parameters(),
-            $this->all()
         );
-        logger()->info($temp);
+        logger()->info(print_r($temp, true));
         return $temp;
     }
 

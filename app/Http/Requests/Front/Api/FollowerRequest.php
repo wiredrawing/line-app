@@ -5,6 +5,7 @@ namespace App\Http\Requests\Front\Api;
 use App\Http\Requests\Front\Api\Base\BaseRequest;
 use App\Models\Follower;
 use App\Models\Player;
+use App\Rules\ApiTokenRule;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
@@ -44,15 +45,16 @@ class FollowerRequest extends BaseRequest
                         "api_token" => [
                             "required",
                             "string",
-                            function ($attribute, $value, $fail) {
-                                // 当該のapi_tokenキーで正しいplayer_idが指定されているかどうか
-                                $player_id = $this->route()->parameter("to_player_id");
-                                $player = Player::where(["api_token" => $value])->find($player_id);
-                                if ($player === null) {
-                                    return $fail("指定したAPIトークンとプレイヤーIDがマッチしません");
-                                }
-                                return true;
-                            }
+                            (new ApiTokenRule())->setPlayerId($this->route()->parameter("to_player_id")),
+                            // function ($attribute, $value, $fail) {
+                            //     // 当該のapi_tokenキーで正しいplayer_idが指定されているかどうか
+                            //     $player_id = $this->route()->parameter("to_player_id");
+                            //     $player = Player::where(["api_token" => $value])->find($player_id);
+                            //     if ($player === null) {
+                            //         return $fail("指定したAPIトークンとプレイヤーIDがマッチしません");
+                            //     }
+                            //     return true;
+                            // }
                         ]
                     ];
                 } else if ($route_name === "front.api.top.follower.following") {
@@ -66,15 +68,16 @@ class FollowerRequest extends BaseRequest
                         "api_token" => [
                             "required",
                             "string",
-                            function ($attribute, $value, $fail) {
-                                // 当該のapi_tokenキーで正しいplayer_idが指定されているかどうか
-                                $player_id = $this->route()->parameter("from_player_id");
-                                $player = Player::where(["api_token" => $value])->find($player_id);
-                                if ($player === null) {
-                                    return $fail("指定したAPIトークンとプレイヤーIDがマッチしません");
-                                }
-                                return true;
-                            }
+                            (new ApiTokenRule())->setPlayerId($this->route()->parameter("from_player_id")),
+                            // function ($attribute, $value, $fail) {
+                            //     // 当該のapi_tokenキーで正しいplayer_idが指定されているかどうか
+                            //     $player_id = $this->route()->parameter("from_player_id");
+                            //     $player = Player::where(["api_token" => $value])->find($player_id);
+                            //     if ($player === null) {
+                            //         return $fail("指定したAPIトークンとプレイヤーIDがマッチしません");
+                            //     }
+                            //     return true;
+                            // }
                         ]
                     ];
                 } else if ($route_name === "front.api.top.follower.matched") {
@@ -88,15 +91,16 @@ class FollowerRequest extends BaseRequest
                         "api_token" => [
                             "required",
                             "string",
-                            function ($attribute, $value, $fail) {
-                                // 当該のapi_tokenキーで正しいplayer_idが指定されているかどうか
-                                $player_id = $this->route()->parameter("from_player_id");
-                                $player = Player::where(["api_token" => $value])->find($player_id);
-                                if ($player === null) {
-                                    return $fail("指定したAPIトークンとプレイヤーIDがマッチしません");
-                                }
-                                return true;
-                            }
+                            (new ApiTokenRule())->setPlayerId($this->input("from_player_id")),
+                            // function ($attribute, $value, $fail) {
+                            //     // 当該のapi_tokenキーで正しいplayer_idが指定されているかどうか
+                            //     $player_id = $this->route()->parameter("from_player_id");
+                            //     $player = Player::where(["api_token" => $value])->find($player_id);
+                            //     if ($player === null) {
+                            //         return $fail("指定したAPIトークンとプレイヤーIDがマッチしません");
+                            //     }
+                            //     return true;
+                            // }
                         ]
                     ];
                 }
@@ -132,16 +136,7 @@ class FollowerRequest extends BaseRequest
                         "api_token" => [
                             "required",
                             "string",
-                            function ($attribute, $value, $fail) {
-                                logger()->info($attribute);
-                                // 当該のapi_tokenキーで正しいplayer_idが指定されているかどうか
-                                $player_id = $this->input("from_player_id");
-                                $player = Player::where(["api_token" => $value])->find($player_id);
-                                if ($player === null) {
-                                    return $fail("指定したAPIトークンとプレイヤーIDがマッチしません");
-                                }
-                                return true;
-                            }
+                            (new ApiTokenRule())->setPlayerId($this->input("from_player_id")),
                         ],
                     ];
                 } else if ($route_name === "front.api.top.follower.delete") {
@@ -174,16 +169,7 @@ class FollowerRequest extends BaseRequest
                         "api_token" => [
                             "required",
                             "string",
-                            function ($attribute, $value, $fail) {
-                                logger()->info($attribute);
-                                // 当該のapi_tokenキーで正しいplayer_idが指定されているかどうか
-                                $player_id = $this->input("from_player_id");
-                                $player = Player::where(["api_token" => $value])->find($player_id);
-                                if ($player === null) {
-                                    return $fail("指定したAPIトークンとプレイヤーIDがマッチしません");
-                                }
-                                return true;
-                            }
+                            (new ApiTokenRule())->setPlayerId($this->input("from_player_id")),
                         ],
                     ];
                 }
