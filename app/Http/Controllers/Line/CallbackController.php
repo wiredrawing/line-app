@@ -46,7 +46,8 @@ class CallbackController extends Controller
             return redirect()->route("line.callback.completed", [
                 "line_account_id" => $validated_data["line_account_id"],
                 // json web tokenを作成してリダイレクトさせる
-                "jwt" => $lineLoginRepository->makeJsonWebToken($line_member->player->id, $line_member->player->api_token),
+                "api_token" => $line_member->player->api_token,
+                // "jwt" => $lineLoginRepository->makeJsonWebToken($line_member->player->id, $line_member->player->api_token),
             ]);
         } catch (Exception $e) {
             logger()->error($e);
