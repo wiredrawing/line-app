@@ -154,4 +154,6 @@ return [
             "value" => "週7回",
         ],
     ],
+    // jwtの暗号化に使用するkey
+    "secret_key_for_jwt" => "9866d626f0824d398fb689cbaadc7fdcad45cbc542185f166b09a203114c24d6793cea26a60b39c8c832cbe9b34ad5408275b9f56db851279c248ddaf3b00cf1"
 ];

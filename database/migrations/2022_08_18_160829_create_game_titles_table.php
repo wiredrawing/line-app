@@ -17,7 +17,7 @@ class CreateGameTitlesTable extends Migration
             $table->id();
             $table->string("title", 512);
             // ゲームのプラットフォーム PS系,switch,xbox系
-            $table->integer("platform_id");
+            $table->string("platform_id");
             $table->text("description");
             // ゲームジャンル
             $table->integer("genre_id");

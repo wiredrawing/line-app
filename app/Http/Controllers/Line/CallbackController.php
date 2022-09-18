@@ -33,19 +33,20 @@ class CallbackController extends Controller
             // リポジトリパターンで対応
             $line_member = $lineLoginRepository->authenticate($validated_data);
             if ($line_member === null) {
-                throw new \Exception("Callback処理に失敗しました");
+                throw new Exception("Callback処理に失敗しました");
             }
 
             $line_member_id = $line_member->id;
             $line_member = LineMember::with([
                 "player",
-            ])->findOrFail($line_member_id);
+            ])
+                ->findOrFail($line_member_id);
 
             // LINEログイン完了画面へ遷移
             return redirect()->route("line.callback.completed", [
                 "line_account_id" => $validated_data["line_account_id"],
-                // プレイヤーレコードに紐づいたapi_tokenを一緒に返却する
-                "api_token" => $line_member->player->api_token,
+                // json web tokenを作成してリダイレクトさせる
+                "jwt" => $lineLoginRepository->makeJsonWebToken($line_member->player->id, $line_member->player->api_token),
             ]);
         } catch (Exception $e) {
             logger()->error($e);

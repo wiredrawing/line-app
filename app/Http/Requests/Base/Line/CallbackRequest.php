@@ -53,7 +53,12 @@ class CallbackRequest extends FormRequest
                         "required",
                         "integer",
                     ],
-                    "api_token" => [
+                    // "api_token" => [
+                    //     "required",
+                    //     "string",
+                    // ],
+                    // api_tokenの代わりにjwtパラメータを渡す
+                    "jwt" => [
                         "required",
                         "string",
                     ],

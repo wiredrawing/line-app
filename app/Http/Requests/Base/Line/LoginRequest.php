@@ -48,11 +48,15 @@ class LoginRequest extends FormRequest
     }
 
 
-    public function validationData()
+    /**
+     * @return array
+     */
+    public function validationData(): array
     {
         return array_merge(
             $this->all(),
             $this->route()->parameters(),
+            $this->input(),
         );
     }
 }

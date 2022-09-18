@@ -12,13 +12,12 @@ class FollowerTest extends TestCase
 {
 
     /**
-     * 自分以外のプレイヤーをフォローする
-     *
-     * @test
+     * 共通処理
      * @return void
      */
-    public function test_自分以外のプレイヤーをフォローする()
+    public function setUp(): void
     {
+        parent::setUp();
         // ----------------------------------------------
         // ダミーデータを作成する
         // ----------------------------------------------
@@ -29,6 +28,26 @@ class FollowerTest extends TestCase
                 ->has(Player::factory()
                     ->count(1), "player"), "line_members")
             ->create();
+    }
+
+    /**
+     * 自分以外のプレイヤーをフォローする
+     *
+     * @test
+     * @return void
+     */
+    public function test_自分以外のプレイヤーをフォローする()
+    {
+        // // ----------------------------------------------
+        // // ダミーデータを作成する
+        // // ----------------------------------------------
+        // $line_account = LineAccount::factory()
+        //     ->count(1)
+        //     ->has(LineMember::factory()
+        //         ->count(10)
+        //         ->has(Player::factory()
+        //             ->count(1), "player"), "line_members")
+        //     ->create();
 
         // 作成されたダミープレイヤー情報を取得
         $from_player = Player::all()->get(0);
@@ -91,16 +110,16 @@ class FollowerTest extends TestCase
      */
     public function test_フォロー中の他プレイヤーのフォローを外す()
     {
-        // ----------------------------------------------
-        // ダミーデータを作成する
-        // ----------------------------------------------
-        $line_account = LineAccount::factory()
-            ->count(1)
-            ->has(LineMember::factory()
-                ->count(10)
-                ->has(Player::factory()
-                    ->count(1), "player"), "line_members")
-            ->create();
+        // // ----------------------------------------------
+        // // ダミーデータを作成する
+        // // ----------------------------------------------
+        // $line_account = LineAccount::factory()
+        //     ->count(1)
+        //     ->has(LineMember::factory()
+        //         ->count(10)
+        //         ->has(Player::factory()
+        //             ->count(1), "player"), "line_members")
+        //     ->create();
 
         // 作成されたダミープレイヤー情報を取得
         $from_player = Player::get()->first();
@@ -153,16 +172,16 @@ class FollowerTest extends TestCase
      */
     public function test_現在フォローしている他プレイヤー一覧を取得する()
     {
-        // ------------------------------------------------------------
-        // ダミーのプレイヤーデータ一覧を作成する
-        // ------------------------------------------------------------
-        $line_account = LineAccount::factory()
-            ->count(1)
-            ->has(LineMember::factory()
-                ->count(100)
-                ->has(Player::factory()
-                    ->count(1), "player",), "line_members",)
-            ->create();
+        // // ------------------------------------------------------------
+        // // ダミーのプレイヤーデータ一覧を作成する
+        // // ------------------------------------------------------------
+        // $line_account = LineAccount::factory()
+        //     ->count(1)
+        //     ->has(LineMember::factory()
+        //         ->count(100)
+        //         ->has(Player::factory()
+        //             ->count(1), "player",), "line_members",)
+        //     ->create();
 
         // ベースとなるプレイヤー情報を取得する
         $player = Player::orderBy("id", "asc")

@@ -3,4 +3,4 @@
 (LINEプラットフォームとは無関係です)
 
 
-<p>{{$validated["api_token"]}}</p>
+<p>{{$validated["jwt"]}}</p>

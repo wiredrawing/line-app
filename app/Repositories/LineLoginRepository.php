@@ -8,6 +8,8 @@ use App\Libraries\RandomToken;
 use App\Models\Player;
 use App\Models\LineAccount;
 use App\Models\LineMember;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Exception;
@@ -217,5 +219,34 @@ class LineLoginRepository implements LineLoginInterface
             throw new Exception("Failed updating existing line member info.");
         }
         return LineMember::findOrFail($line_member->id);
+    }
+
+    /**
+     * player_idとapi_tokenでJWTを作成する
+     *
+     * @param int $player_id
+     * @param string $api_token
+     * @return string|null
+     */
+    public function makeJsonWebToken(int $player_id, string $api_token): ?string
+    {
+        try {
+            $payload = [
+                'iss' => 'http://example.org',
+                'aud' => 'http://example.com',
+                // 'iat' => 1356999524,
+                // 'nbf' => 1357000000,
+                "player_id" => $player_id,
+                "api_token" => $api_token,
+            ];
+            $jwt = JWT::encode($payload, Config("const.secret_key_for_jwt"), 'HS512');
+            // jwtをデコードする処理
+            // $decoded = JWT::decode($jwt, new Key(Config("const.secret_key_for_jwt"), 'HS512'));
+            logger()->info($jwt);
+            return $jwt;
+        } catch (Throwable $e) {
+            logger()->error($e);
+            return null;
+        }
     }
 }
