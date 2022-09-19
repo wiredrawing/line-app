@@ -10,6 +10,17 @@ use Tests\TestCase;
 
 class GameTitleTest extends TestCase
 {
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $line_account = LineAccount::factory()
+            ->count(1)
+            ->has(LineMember::factory()
+                ->count(10)
+                ->has(Player::factory(), "player"), "line_members",)
+            ->create();
+    }
     // use RefreshDatabase;
     /**
      * 新規のゲームタイトル登録処理
@@ -18,12 +29,12 @@ class GameTitleTest extends TestCase
      */
     public function test_create_title()
     {
-        $line_account = LineAccount::factory()
-            ->count(1)
-            ->has(LineMember::factory()
-                ->count(10)
-                ->has(Player::factory(), "player"), "line_members",)
-            ->create();
+        // $line_account = LineAccount::factory()
+        //     ->count(1)
+        //     ->has(LineMember::factory()
+        //         ->count(10)
+        //         ->has(Player::factory(), "player"), "line_members",)
+        //     ->create();
 
         $line_account = LineAccount::with([
             "line_members",
@@ -84,15 +95,15 @@ class GameTitleTest extends TestCase
      */
     public function test_update_title()
     {
-        // ダミーユーザーデータを作成
-        $line_account = LineAccount::factory()->count(1)->has(
-            LineMember::factory()->count(10)->has(
-                Player::factory()->count(10),
-                "player"
-            ),
-            "line_members",
-        )->create();
-        logger()->info(print_r($line_account->toArray(), true));
+        // // ダミーユーザーデータを作成
+        // $line_account = LineAccount::factory()
+        //     ->count(1)
+        //     ->has(LineMember::factory()
+        //         ->count(10)
+        //         ->has(Player::factory()
+        //             ->count(10), "player"), "line_members",)
+        //     ->create();
+        // logger()->info(print_r($line_account->toArray(), true));
 
         $player = Player::get()->last();
         logger()->info(print_r($player, true));

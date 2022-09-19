@@ -14,13 +14,9 @@ use Tests\TestCase;
 
 class PlayingGameTitleTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function test_create_playing_game_title()
+    public function setUp(): void
     {
+        parent::setUp();
         $line_account = LineAccount::factory()
             ->count(1)
             ->has(LineMember::factory()
@@ -28,6 +24,22 @@ class PlayingGameTitleTest extends TestCase
                 ->has(Player::factory()
                     ->count(10), "player"), "line_members")
             ->create();
+    }
+
+    /**
+     * A basic feature test example.
+     *
+     * @return void
+     */
+    public function test_create_playing_game_title()
+    {
+        // $line_account = LineAccount::factory()
+        //     ->count(1)
+        //     ->has(LineMember::factory()
+        //         ->count(10)
+        //         ->has(Player::factory()
+        //             ->count(10), "player"), "line_members")
+        //     ->create();
 
         $line_account = LineAccount::with([
             "line_members",
@@ -83,13 +95,13 @@ class PlayingGameTitleTest extends TestCase
      */
     public function test_fetch_game_titles_per_player()
     {
-        $line_account = LineAccount::factory()
-            ->count(1)
-            ->has(LineMember::factory()
-                ->count(10)
-                ->has(Player::factory()
-                    ->count(10), "player",), "line_members",)
-            ->create();
+        // $line_account = LineAccount::factory()
+        //     ->count(1)
+        //     ->has(LineMember::factory()
+        //         ->count(10)
+        //         ->has(Player::factory()
+        //             ->count(10), "player",), "line_members",)
+        //     ->create();
 
         $player = Player::get()
             ->last();

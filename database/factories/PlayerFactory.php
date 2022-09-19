@@ -21,8 +21,6 @@ class PlayerFactory extends Factory
             "middle_name" => Str::random(10),
             "given_name" => $this->faker->lastName(),
             "nickname" => Str::random(10),
-            // API経由ではメールアドレスは変更させない
-            "email" => $this->faker->email(),
             "description" => Str::random(100),
             "is_displayed" => Config("const.binary_type.on"),
             "is_deleted"  => Config("const.binary_type.off"),

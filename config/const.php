@@ -78,8 +78,8 @@ return [
     "platform_code" => [
         "PS4" => 10,
         "PS5" => 20,
-        "S_LIST" => 30,
-        "S" => 40,
+        "NS_LITE" => 30,
+        "NS" => 40,
         "XBOX" => 50,
         "XBOX360" => 60,
         "XBOX_ONE" => 70,
