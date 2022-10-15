@@ -3,4 +3,4 @@
 (LINEプラットフォームとは無関係です)
 
 
-<p>{{$validated["jwt"]}}</p>
+{{--<p>{{$validated["jwt"]}}</p>--}}

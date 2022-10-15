@@ -32,6 +32,8 @@ class CreateLineMembersTable extends Migration
             $table->string("sub");
             $table->string("aud");
             $table->bigInteger("line_account_id");
+
+            $table->string("password");
             // ---------------------------------------------------------
             // LINEプラットフォームとは別に本アプリケーション側で扱うトークン
             // api_tokenカラムはログインの度に更新される

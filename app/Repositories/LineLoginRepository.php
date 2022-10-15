@@ -8,11 +8,14 @@ use App\Libraries\RandomToken;
 use App\Models\Player;
 use App\Models\LineAccount;
 use App\Models\LineMember;
+use App\Models\User;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Exception;
+use Illuminate\Support\Facades\Validator;
 use Throwable;
 
 class LineLoginRepository implements LineLoginInterface
@@ -73,6 +76,8 @@ class LineLoginRepository implements LineLoginInterface
             $line_info["aud"] = $response["aud"];
             $line_info["line_account_id"] = $validated_data["line_account_id"];
             $line_info["api_token"] = $validated_data["api_token"];
+            // パスワードはランダムな値をパスワードとする
+            $line_info["password"] = Hash::make(RandomToken::MakeRandomToken(64));
 
             try {
                 DB::beginTransaction();
@@ -248,5 +253,50 @@ class LineLoginRepository implements LineLoginInterface
             logger()->error($e);
             return null;
         }
+    }
+
+    /**
+     * Laravelデフォルトの認証システムに登録する
+     * @param array $new_user
+     * @return void|null
+     */
+    public function addUserTable(array $new_user =[])
+    {
+        // try {
+        //     $validator =  Validator::make($new_user, [
+        //         'name' => ['required', 'string', 'max:255'],
+        //         'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        //         // パスワードはランダムな値をシステム側で作成する
+        //         // 'password' => ['required', 'string', 'min:8', 'confirmed'],
+        //     ]);
+        //
+        //     // If validation fails, throw an error.
+        //     if ($validator->fails()) {
+        //         logger()->error(print_r($validator->getMessageBag()->getMessages(), true));
+        //         throw new \Exception("LINEログインデータのバリデーションに失敗しました");
+        //     }
+        //
+        //     // LINEログインしたデータでusersテーブルにレコードがないかを検証する
+        //     $user = User::where([
+        //         "email" => $new_user["email"],
+        //     ])->get()->first();
+        //
+        //     if ($user === null) {
+        //         $user = User::create([
+        //             "name" => $new_user["name"],
+        //             "email" => $new_user["email"],
+        //             "password" => Hash::make(RandomToken::MakeRandomToken(72)),
+        //         ]);
+        //         $user->markEmailAsVerified ();
+        //         print_r(get_class_methods($user));
+        //         return $user;
+        //     }
+        //
+        //
+        // } catch (\Throwable $e) {
+        //     var_dump($e->getMessage());
+        //     logger()->error($e);
+        //     return null;
+        // }
     }
 }

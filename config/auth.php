@@ -21,7 +21,7 @@ return [
     // 認証機能を任意のテーブルに変更する
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'administrators',
+        'passwords' => 'line_members',
     ],
 
     /*
@@ -50,9 +50,13 @@ return [
 
     // 任意のproviderに変更する
     'guards' => [
-        'web' => [
+        'admin' => [
             'driver' => 'session',
             'provider' => 'administrators',
+        ],
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'line_members',
         ],
     ],
 
@@ -78,7 +82,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Administrator::class,
         ],
-
+        'line_members' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\LineMember::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

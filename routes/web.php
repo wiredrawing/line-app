@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Line\LineMemberController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Line\LoginController;
 use App\Http\Controllers\Line\LogoutController;
@@ -22,6 +23,15 @@ Route::get('/', function () {
     return redirect()->route("line.login.index");
 });
 
+
+Route::group(["prefix" => "user", "as" => "user.",], function () {
+    Route::middleware("auth")->group(function () {
+        Route::get("/index", [
+            LineMemberController::class,
+            "index",
+        ]);
+    });
+});
 
 // -------------------------------------------------------------------------
 // LINEログイン用のグループURL
@@ -85,3 +95,11 @@ Route::group(["prefix" => "line", "as" => "line."], function () {
 //
 //     });
 // });
+
+// Auth::routes();
+//
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//
+// Auth::routes();
+//
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

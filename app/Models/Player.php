@@ -7,6 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+
+/**
+ * @property $line_member_id
+ * @property $family_name
+ * @property $middle_name
+ * @property $given_name
+ * @property $nickname
+ * @property $description
+ * @property $is_displayed
+ * @property $is_deleted
+ * @property $gender_id
+ * @property $is_published
+ * @property $api_token
+ * @property $memo
+ */
 class Player extends Model
 {
     use HasFactory;

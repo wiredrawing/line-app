@@ -11,6 +11,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class CallbackController extends Controller
 {
@@ -46,7 +47,7 @@ class CallbackController extends Controller
             return redirect()->route("line.callback.completed", [
                 "line_account_id" => $validated_data["line_account_id"],
                 // json web tokenを作成してリダイレクトさせる
-                "api_token" => $line_member->player->api_token,
+                "api_token" => $line_member->api_token,
                 // "jwt" => $lineLoginRepository->makeJsonWebToken($line_member->player->id, $line_member->player->api_token),
             ]);
         } catch (Exception $e) {
@@ -68,6 +69,15 @@ class CallbackController extends Controller
     {
         try {
             $validated = $request->validated();
+            $line_member = LineMember::where([
+                "api_token" => $validated["api_token"]
+            ])->get()->first();
+            Auth::login($line_member);
+            var_dump($request->user()->toArray());
+            // $is_authencated = Auth::attempt(
+            //     $this->only('email', 'password'),
+            //     $this->boolean('remember')
+            // );
             // --------------------------------------------
             // 実際は本webアプリケーションを利用する側のサイトへ
             // ?api_token=something というqueryをともなって
