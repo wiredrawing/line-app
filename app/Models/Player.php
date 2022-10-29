@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property $is_published
  * @property $api_token
  * @property $memo
+ * @method static create(array $new_end_user)
  */
 class Player extends Model
 {

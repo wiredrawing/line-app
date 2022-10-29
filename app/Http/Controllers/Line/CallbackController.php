@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Line;
 
+use App\Events\RegisteredLineMemberFirst;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Base\Line\CallbackRequest;
 use App\Interfaces\LineLoginInterface;
@@ -37,6 +38,10 @@ class CallbackController extends Controller
                 throw new Exception("Callback処理に失敗しました");
             }
 
+            // // 初回登録時,メール送信イベントを実行する
+            // // LINE通知処理
+            // event(new RegisteredLineMemberFirst($line_member));
+
             $line_member_id = $line_member->id;
             $line_member = LineMember::with([
                 "player",
@@ -70,10 +75,13 @@ class CallbackController extends Controller
         try {
             $validated = $request->validated();
             $line_member = LineMember::where([
-                "api_token" => $validated["api_token"]
-            ])->get()->first();
+                "api_token" => $validated["api_token"],
+            ])
+                ->get()
+                ->first();
             Auth::login($line_member);
-            var_dump($request->user()->toArray());
+            var_dump($request->user()
+                ->toArray());
             // $is_authencated = Auth::attempt(
             //     $this->only('email', 'password'),
             //     $this->boolean('remember')

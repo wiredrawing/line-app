@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(["prefix" => "/", "as" => "admin."], function () {
 
-
     // --------------------------------------------------
     // 管理画面側ログインページ
     // guest:webルーティングを使用することでこのルーティングに

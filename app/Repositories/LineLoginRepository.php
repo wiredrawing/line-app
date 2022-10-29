@@ -3,21 +3,23 @@
 namespace App\Repositories;
 
 
+use App\Events\RegisteredLineMemberFirst;
 use App\Interfaces\LineLoginInterface;
 use App\Libraries\RandomToken;
 use App\Models\Player;
 use App\Models\LineAccount;
 use App\Models\LineMember;
-use App\Models\User;
 use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Exception;
-use Illuminate\Support\Facades\Validator;
 use Throwable;
 
+/**
+ * @property LineAccount $line_account
+ * @property string $api_token
+ */
 class LineLoginRepository implements LineLoginInterface
 {
     private $line_account = null;
@@ -91,6 +93,10 @@ class LineLoginRepository implements LineLoginInterface
                 if ($line_member === null) {
                     // 新規player情報を追加
                     $line_member = $this->createLineMember($line_info);
+                    // -----------------------------------------------
+                    // 初回登録時のみメール送信イベントを実行する
+                    // -----------------------------------------------
+                    event(new RegisteredLineMemberFirst($line_member));
                 } else {
                     // 二度目のログインの場合情報のアップデートを実行
                     $line_member = $this->updateLineMember($line_info, $line_member);
@@ -170,7 +176,7 @@ class LineLoginRepository implements LineLoginInterface
      * @return LineMember
      * @throws Exception
      */
-    private function createLineMember(array $new_line_info): \App\Models\LineMember
+    private function createLineMember(array $new_line_info): LineMember
     {
         // 当該のLINEアプリケーションへのログインが始めての場合
         // line_membersテーブルへ新規insert
