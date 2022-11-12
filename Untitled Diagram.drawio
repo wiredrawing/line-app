@@ -1,17 +1,50 @@
-<mxfile host="app.diagrams.net" modified="2022-11-12T09:23:33.054Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36" etag="s3DV4020bGC7EYsKC2D4" version="20.5.3" type="github">
+<mxfile host="app.diagrams.net" modified="2022-11-12T09:26:54.442Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36" etag="ion-clQZugtP99vXrEQF" version="20.5.3" type="github">
   <diagram id="nBwjC7HzC-toV3b1rswN" name="Page-1">
     <mxGraphModel dx="1379" dy="798" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Uiuv5N7ZUfGhst5ddR6n-1" target="Uiuv5N7ZUfGhst5ddR6n-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="Uiuv5N7ZUfGhst5ddR6n-1" value="検索機能" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="40" y="40" width="160" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Uiuv5N7ZUfGhst5ddR6n-2" value="管理画面機能" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="200" width="160" height="40" as="geometry" />
+          <mxGeometry x="10" y="510" width="160" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Uiuv5N7ZUfGhst5ddR6n-3" value="マイページ機能" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="120" width="160" height="40" as="geometry" />
+          <mxGeometry x="70" y="560" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-6" value="このサイトについて" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="700" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Uiuv5N7ZUfGhst5ddR6n-7" target="Uiuv5N7ZUfGhst5ddR6n-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-7" value="求人一覧" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="40" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Uiuv5N7ZUfGhst5ddR6n-9" target="Uiuv5N7ZUfGhst5ddR6n-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-9" value="求人詳細" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="120" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Uiuv5N7ZUfGhst5ddR6n-12" target="Uiuv5N7ZUfGhst5ddR6n-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-12" value="求人申し込みページ" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="200" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Uiuv5N7ZUfGhst5ddR6n-14" target="Uiuv5N7ZUfGhst5ddR6n-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-14" value="求人申し込み確認ページ" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="280" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-16" value="求人申し込み完了ページ" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="360" width="160" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
