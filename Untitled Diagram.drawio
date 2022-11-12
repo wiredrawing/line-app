@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-11-12T09:26:54.442Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36" etag="ion-clQZugtP99vXrEQF" version="20.5.3" type="github">
+<mxfile host="app.diagrams.net" modified="2022-11-12T09:32:07.710Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36" etag="44e4OLz-DJMVVYYm_HMu" version="20.5.3" type="github">
   <diagram id="nBwjC7HzC-toV3b1rswN" name="Page-1">
     <mxGraphModel dx="1379" dy="798" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -11,10 +11,13 @@
           <mxGeometry x="40" y="40" width="160" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Uiuv5N7ZUfGhst5ddR6n-2" value="管理画面機能" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="10" y="510" width="160" height="40" as="geometry" />
+          <mxGeometry x="520" y="700" width="160" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-3" value="マイページ機能" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="70" y="560" width="160" height="40" as="geometry" />
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Uiuv5N7ZUfGhst5ddR6n-3" target="Uiuv5N7ZUfGhst5ddR6n-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-3" value="会員機能" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="440" width="160" height="40" as="geometry" />
         </mxCell>
         <mxCell id="Uiuv5N7ZUfGhst5ddR6n-6" value="このサイトについて" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="40" y="700" width="160" height="40" as="geometry" />
@@ -45,6 +48,39 @@
         </mxCell>
         <mxCell id="Uiuv5N7ZUfGhst5ddR6n-16" value="求人申し込み完了ページ" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="240" y="360" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Uiuv5N7ZUfGhst5ddR6n-18" target="Uiuv5N7ZUfGhst5ddR6n-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-18" value="ログイン" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="520" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Uiuv5N7ZUfGhst5ddR6n-20" target="Uiuv5N7ZUfGhst5ddR6n-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-20" value="会員登録" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="440" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Uiuv5N7ZUfGhst5ddR6n-25" target="Uiuv5N7ZUfGhst5ddR6n-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Uiuv5N7ZUfGhst5ddR6n-25" target="Uiuv5N7ZUfGhst5ddR6n-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Uiuv5N7ZUfGhst5ddR6n-25" target="Uiuv5N7ZUfGhst5ddR6n-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-25" value="マイページ" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="600" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-28" value="応募済み一覧" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="440" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-30" value="検討中一覧(ブックマーク)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="520" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Uiuv5N7ZUfGhst5ddR6n-32" value="メッセージボックス" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="600" width="160" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
